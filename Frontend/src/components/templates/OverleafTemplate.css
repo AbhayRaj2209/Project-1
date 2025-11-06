@@ -1,0 +1,78 @@
+/* src/components/templates/OverleafTemplate.css */
+.overleaf-root {
+    display: flex;
+    background: #ffffff;
+    color: #0f172a;
+    border: 1px solid #e6e9ef;
+    border-radius: 8px;
+    overflow: hidden;
+    font-family: 'Georgia', 'Times New Roman', serif;
+    line-height: 1.45;
+}
+
+:root {
+    --ov-theme: #4f46e5;
+}
+
+.ov-left {
+    width: 28%;
+    background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+    padding: 28px 22px;
+    border-right: 1px solid #eef2f7;
+}
+
+.ov-left-inner { position: sticky; top: 20px; }
+
+.ov-name { font-size: 1.35rem; font-weight: 800; color: #111827; margin-bottom: 4px; }
+.ov-title { font-size: 0.95rem; color: #374151; margin-bottom: 14px; font-weight: 600 }
+
+.ov-section { margin-top: 16px; }
+.ov-section h4 { margin: 0 0 8px 0; font-size: 0.95rem; letter-spacing: 0.02em; color: #0f172a }
+.ov-list { list-style: none; padding: 0; margin: 0; }
+.ov-list li { font-size: 0.9rem; color: #374151; margin-bottom: 6px }
+
+.ov-right { flex-grow: 1; padding: 24px 28px; }
+.ov-right-inner { max-width: 900px; margin: 0 auto; }
+
+/* Internal template header (applies header details inside template) */
+.ov-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 18px;
+    border-radius: 6px;
+    margin-bottom: 18px;
+    background: linear-gradient(90deg, var(--ov-theme) 0%, #7c3aed 60%);
+    color: white;
+    align-items: center;
+}
+
+.ov-template-logo { width: 44px; height: 44px; border-radius: 8px; object-fit: cover; }
+.ov-header-left { flex-shrink: 0 }
+.ov-header-right { display: flex; flex-direction: column }
+.ov-header-name { font-weight: 800; font-size: 1.15rem }
+.ov-header-title { font-size: 0.9rem; opacity: 0.95 }
+
+.ov-block { margin-bottom: 20px; }
+.ov-block h3 { margin: 0 0 8px 0; font-family: 'Helvetica Neue', Arial, sans-serif; font-weight: 700; color: #0f172a }
+.muted { color: #6b7280 }
+
+.exp-item { margin-bottom: 12px; }
+.exp-head { display:flex; justify-content: space-between; gap: 12px; align-items: baseline }
+.exp-head strong { font-size: 1rem }
+.exp-date { font-size: 0.85rem; color: #6b7280 }
+.exp-company { font-size: 0.92rem; color: #374151; margin-bottom: 6px }
+.exp-desc { margin: 0; color: #374151 }
+
+.proj-item, .edu-item { margin-bottom: 12px }
+.proj-head, .edu-head { display:flex; justify-content: space-between; gap: 12px; align-items: baseline }
+.proj-link a { font-size: 0.85rem; color: #4f46e5; text-decoration: none }
+.proj-desc { margin: 6px 0 0 0; }
+
+/* Responsive: single column on small screens */
+@media (max-width: 880px) {
+    .overleaf-root { flex-direction: column; font-family: 'Inter', sans-serif }
+    .ov-left { width: 100%; border-right: none; border-bottom: 1px solid #eef2f7; padding: 20px }
+    .ov-right { padding: 18px }
+    .ov-left-inner { position: relative; top: 0 }
+}

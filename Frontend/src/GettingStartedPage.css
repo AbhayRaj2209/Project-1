@@ -1,0 +1,118 @@
+/* src/GettingStartedPage.css */
+.getting-started-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    min-height: 100vh;
+    padding: 0 2rem; /* Remove vertical padding */
+    background-color: #f7f9fc;
+    box-sizing: border-box;
+    overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+.getting-started-content {
+    /* Increased max-width for a fuller look on desktops */
+    max-width: 1200px; 
+    width: 100%;
+    text-align: center;
+    background-color: #ffffff;
+    padding: 4rem; /* More internal padding */
+    border-radius: 16px; /* Softer corners */
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08); /* A more subtle shadow */
+}
+
+.getting-started-content h1 {
+    font-size: 2.5rem; /* Larger title */
+    font-weight: 700; /* Bolder */
+    color: #111827;
+    margin-bottom: 4rem;
+}
+
+.steps-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    position: relative;
+    margin-bottom: 4rem;
+    gap: 2rem; /* Add gap for spacing */
+}
+
+.step {
+    flex: 1;
+    max-width: 300px; /* Allow steps to be a bit wider */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.step-icon-wrapper {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    background-color: #eef2ff; 
+}
+
+.step-icon {
+    width: 40px;
+    height: 40px;
+    color: #4f46e5; 
+}
+
+.step h3 {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: #111827;
+    margin-bottom: 0.75rem;
+}
+
+.step p {
+    font-size: 1rem;
+    color: #6b7280;
+    line-height: 1.6;
+}
+
+.step-connector {
+    flex-grow: 1;
+    height: 2px;
+    background-image: linear-gradient(to right, #d1d5db 50%, transparent 50%);
+    background-size: 8px 2px;
+    margin: 0 1rem;
+    position: relative;
+    top: 40px; 
+}
+
+.continue-button {
+    padding: 0.8rem 2.5rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: white;
+    background-color: #4f46e5;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.continue-button:hover {
+    background-color: #4338ca;
+}
+
+/* Responsive adjustments for smaller screens (tablets/mobiles) */
+@media (max-width: 992px) {
+    .steps-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 3rem; /* More gap on smaller screens */
+    }
+    .step-connector {
+        display: none;
+    }
+    .getting-started-content {
+        padding: 2.5rem;
+    }
+}

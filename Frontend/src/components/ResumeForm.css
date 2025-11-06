@@ -1,0 +1,79 @@
+/* src/components/ResumeForm.css */
+.resume-form {
+    padding: 10px;
+    height: 100%;
+    overflow-y: auto; /* Allows the form to scroll if it gets too long */
+}
+
+.resume-form fieldset {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 25px;
+    background-color: #f9fafb;
+}
+
+.resume-form legend {
+    padding: 0 10px;
+    font-weight: 600;
+    color: #4f46e5;
+    font-size: 1.1rem;
+}
+
+.resume-form .form-group {
+    margin-bottom: 15px;
+}
+
+.resume-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: #374151;
+    font-size: 0.9rem;
+}
+
+.resume-form input,
+.resume-form textarea {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    background-color: #fff;
+}
+
+.resume-form input:focus,
+.resume-form textarea:focus {
+    border-color: #4f46e5;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+}
+
+.resume-form textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.project-item {
+    border: 1px dashed #e5e7eb;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    background: #fff;
+}
+.project-item input,
+.project-item textarea {
+    margin-bottom: 8px;
+}
+.project-actions {
+    display: flex;
+    gap: 8px;
+}
+.small-btn {
+    background: #efefef;
+    border: 1px solid #ddd;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+}

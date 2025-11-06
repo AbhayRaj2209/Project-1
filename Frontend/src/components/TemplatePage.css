@@ -1,0 +1,104 @@
+/* src/TemplatePage.css */
+.template-page-container {
+    width: 100vw;
+    min-height: 100vh;
+    padding: 40px;
+    background-color: #f7f9fc;
+    font-family: 'Segoe UI', sans-serif;
+    box-sizing: border-box;
+    overflow-x: hidden; /* Prevents horizontal scroll and black bars */
+    margin: 0;
+}
+
+.template-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.template-header h1 {
+    font-size: 2.5rem;
+    color: #333;
+}
+
+.template-header p {
+    font-size: 1.1rem;
+    color: #666;
+    margin-top: 10px;
+}
+
+.back-to-dashboard-link {
+    display: inline-block;
+    margin-top: 20px;
+    color: #0b5ed7;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.template-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    max-width: 1400px; /* Give it a max-width for very large screens */
+    margin: 0 auto;
+}
+
+.template-card {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.template-card:hover {
+    transform: scale(1.03);
+}
+
+.template-image {
+    width: 100%;
+    display: block;
+    aspect-ratio: 1 / 1.41; /* Maintain A4-like aspect ratio */
+    object-fit: cover;
+}
+
+.template-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    color: white;
+    padding: 40px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.template-card:hover .template-overlay {
+    opacity: 1;
+}
+
+.template-overlay h3 {
+    margin: 0;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.use-template-btn {
+    padding: 10px 20px;
+    border: none;
+    background-color: #0b5ed7;
+    color: white;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.use-template-btn:hover {
+    background-color: #0a58ca;
+}

@@ -1,0 +1,168 @@
+
+.pro-resume {
+    background: white;
+    padding: 30px;
+    font-family: 'Garamond', 'Times New Roman', serif;
+    color: #1a1a1a;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    border: 1px solid #eee;
+    min-height: 1122px; /* A4 paper height approximation */
+}
+    .pro-resume {
+        background: #ffffff;
+        padding: 28px;
+        font-family: 'Garamond', 'Times New Roman', serif;
+        color: #111827;
+        box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+        border-radius: 6px;
+        border: 1px solid #eef2f7;
+        min-height: 1122px; /* A4 paper height approximation */
+    }
+.pro-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 2px solid #333;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+    .pro-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding-bottom: 12px;
+        margin-bottom: 18px;
+        border-bottom: 1px solid #e6edf3;
+    }
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.logo-img {
+    width: 80px;
+    height: 80px;
+}
+
+.header-title h1 {
+    font-size: 28px;
+    margin: 0;
+    font-weight: 600;
+}
+    .header-title h1 {
+        font-size: 26px;
+        margin: 0;
+        font-weight: 700;
+        color: #0f172a;
+    }
+    .header-title p {
+        margin: 2px 0;
+        font-size: 13px;
+        color: #475569;
+    }
+
+.header-title p {
+    margin: 2px 0;
+    font-size: 14px;
+}
+    .header-right {
+        text-align: right;
+        font-size: 13px;
+        display:flex;
+        flex-direction:column;
+        gap:6px;
+    }
+
+    .header-right p { margin: 0; }
+
+    .header-right a {
+        text-decoration: none;
+        color: #0f172a;
+        display:inline-flex;
+        align-items:center;
+        gap:8px;
+    }
+    .header-right a svg { fill: #0f172a; opacity: 0.85 }
+    .header-right a:hover { text-decoration: underline }
+
+.header-right {
+    text-align: right;
+    font-size: 14px;
+}
+
+.header-right p {
+    margin: 2px 0;
+}
+
+.header-right a {
+    text-decoration: none;
+    color: #1a1a1a;
+}
+.header-right a:hover {
+    text-decoration: underline;
+}
+
+.pro-main section {
+    margin-bottom: 20px;
+}
+    .pro-main section { margin-bottom: 20px; }
+
+    .pro-main h2 {
+        font-size: 15px;
+        font-weight: 700;
+        letter-spacing: 0.6px;
+        margin: 0 0 6px 0;
+        color: #0f172a;
+    }
+
+    .divider {
+        height: 1px;
+        background-color: #e6eef6;
+        margin: 6px 0 12px 0;
+    }
+
+.pro-main h2 {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin: 0;
+}
+
+.divider {
+    height: 1.5px;
+    background-color: #333;
+    margin: 5px 0 10px 0;
+}
+
+.section-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.item-left {
+    font-weight: 500;
+}
+
+.item-right {
+    font-style: italic;
+    color: #555;
+}
+
+.section-content {
+    font-size: 14px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+}
+    .section-content {
+        font-size: 14px;
+        line-height: 1.6;
+        white-space: pre-wrap;
+        color: #111827;
+    }
+
+    .pro-resume .section-content a { color: #0f172a; text-decoration: none }
+    .pro-resume .section-content a:hover { text-decoration: underline }
