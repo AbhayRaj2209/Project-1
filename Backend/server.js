@@ -13,20 +13,24 @@ dotenv.config({ path: path.resolve(__dirname, '.env') });
 // --- Imports for Authentication ---
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import User from './User.js'; // Make sure you have the User.js model file in this directory
+import User from './user.js'; 
 
 // --- Existing Imports ---
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
+import fileUpload from 'express-fileupload';
 import resumeRoutes from './routes/resumeRoutes.js';
+import atsRoutes from './routes/atsRoutes.js'; 
 
+// --- App Setup ---
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(fileUpload());
 
-// --- NEW: Authentication Routes ---
 
+// --- Authentication Routes (Your existing code) ---
 // SIGNUP ROUTE
 app.post('/api/signup', async (req, res) => {
     try {
@@ -60,7 +64,7 @@ app.post('/api/login', async (req, res) => {
         const token = jwt.sign(
             { userId: user._id, email: user.email },
             process.env.JWT_SECRET,
-            { expiresIn: '1h' } // Token expires in 1 hour
+            { expiresIn: '1h' }
         );
         res.status(200).json({ message: 'Login successful', token: token });
     } catch (error) {
@@ -69,9 +73,11 @@ app.post('/api/login', async (req, res) => {
 });
 
 
-// --- Existing Resume Routes ---
+// --- Resume Routes ---
 app.use('/api/resume', resumeRoutes);
 
+// --- ATS Routes ---
+app.use('/api/ats', atsRoutes);
 
 // --- Server and DB Connection (Your existing code) ---
 const PORT = process.env.PORT || 5000;

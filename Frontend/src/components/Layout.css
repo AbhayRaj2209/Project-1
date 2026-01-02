@@ -2,15 +2,16 @@
 
 /* Header Styles */
 .app-header {
-    background: linear-gradient(135deg, rgba(79,70,229,0.08) 0%, rgba(124,58,237,0.05) 100%);
-    border-bottom: 1px solid rgba(124,58,237,0.1);
+    background: var(--gradient-bg);
+    border-bottom: 1px solid var(--border-light);
     padding: 0 2rem;
-    height: 72px;
+    height: 56px;
     backdrop-filter: blur(8px);
     position: sticky;
     top: 0;
     z-index: 1000;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
 }
 
 .header-container {
@@ -31,8 +32,8 @@
 .custom-logo {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    padding: 0.5rem;
+    gap: 0.5rem;
+    padding: 0.25rem;
     border-radius: 12px;
     transition: transform 0.3s ease;
 }
@@ -42,7 +43,8 @@
 }
 
 .custom-logo svg {
-    filter: drop-shadow(0 4px 6px rgba(79,70,229,0.1));
+    color: var(--primary);
+    filter: drop-shadow(0 4px 6px var(--accent-glow, rgba(79,70,229,0.2)));
 }
 
 .logo-text-container {
@@ -52,20 +54,16 @@
 }
 
 .logo-text {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     font-weight: 800;
-    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
+    color: var(--primary);
     letter-spacing: -0.02em;
 }
 
 .logo-text-sub {
-    font-size: 0.9rem;
+    font-size: 0.75rem;
     font-weight: 600;
-    color: #6b7280;
+    color: var(--text-muted);
     letter-spacing: -0.01em;
 }
 
@@ -94,29 +92,50 @@
 }
 
 .nav-link {
-    padding: 0.5rem 0.9rem;
+    padding: 0.4rem 0.8rem;
     text-decoration: none;
-    color: #475569;
+    color: var(--text-secondary);
     font-weight: 600;
+    font-size: 0.9rem;
     border-radius: 8px;
     transition: background-color 0.18s, color 0.18s, transform 0.18s;
 }
 
-.nav-link:hover { background-color: rgba(79,70,229,0.05); color: #0f172a }
+.nav-link:hover { 
+    background-color: var(--bg-hover); 
+    color: var(--primary);
+}
 
-.nav-link.active { background-color: rgba(79,70,229,0.09); color: #4f46e5; transform: translateY(-1px) }
+.nav-link.active { 
+    background-color: var(--bg-hover); 
+    color: var(--primary); 
+    transform: translateY(-1px);
+    font-weight: 700;
+}
+
+.user-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
 
 .logout-button-header {
-    padding: 0.45rem 0.95rem;
-    border: 1px solid rgba(15,23,42,0.06);
-    background-color: white;
-    color: #0f172a;
+    padding: 0.4rem 0.85rem;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
     border-radius: 8px;
     cursor: pointer;
     font-weight: 600;
-    transition: background-color 0.15s, transform 0.12s;
+    font-size: 0.9rem;
+    transition: all 0.15s ease;
 }
-.logout-button-header:hover { background-color: #fbfdff; transform: translateY(-1px) }
+
+.logout-button-header:hover { 
+    background-color: var(--bg-hover); 
+    transform: translateY(-1px);
+    border-color: var(--primary);
+}
 
 .header-container { max-width: 1200px }
 
@@ -124,12 +143,13 @@
 /* Footer Styles (compact; aligned with header styles) */
 .app-footer {
     /* use the same visual language as the header but more compact */
-    background: linear-gradient(135deg, rgba(79,70,229,0.08) 0%, rgba(124,58,237,0.05) 100%);
-    border-top: 1px solid rgba(124,58,237,0.08);
-    color: rgba(15, 23, 42, 0.85);
+    background: var(--gradient-bg);
+    border-top: 1px solid var(--border-light);
+    color: var(--text-secondary);
     padding: 0.7rem 1.5rem; /* reduced padding to decrease height */
     margin-top: auto;
     box-shadow: 0 -2px 6px -2px rgba(0, 0, 0, 0.06);
+    transition: all 0.3s ease;
 }
 
 .footer-container {
@@ -151,7 +171,7 @@
 .footer-container p {
     margin: 0;
     font-weight: 600;
-    color: rgba(15, 23, 42, 0.9);
+    color: var(--text-primary);
 }
 
 .footer-links {
@@ -161,17 +181,17 @@
 }
 
 .footer-links a {
-    color: rgba(15, 23, 42, 0.8);
+    color: var(--text-secondary);
     text-decoration: none;
     transition: all 0.16s ease;
     padding: 0.2rem 0.4rem;
     border-radius: 6px;
     font-weight: 600;
-    background: rgba(255,255,255,0.4);
+    background: var(--bg-hover);
 }
 
 .footer-links a:hover {
-    color: #4f46e5;
+    color: var(--primary);
     transform: translateY(-2px);
 }
 
@@ -185,21 +205,21 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    color: rgba(15, 23, 42, 0.85);
+    color: var(--text-secondary);
 }
 
 .contact-item svg {
-    color: rgba(79,70,229,0.9);
+    color: var(--primary);
 }
 
 .contact-item a {
-    color: rgba(15, 23, 42, 0.9);
+    color: var(--text-primary);
     text-decoration: none;
     transition: color 0.12s ease;
 }
 
 .contact-item a:hover {
-    color: #4f46e5;
+    color: var(--primary);
     text-decoration: underline;
 }
 
@@ -218,13 +238,14 @@
 }
 
 .modal-content {
-    background: white;
+    background: var(--bg-card);
     border-radius: 12px;
     width: 90%;
     max-width: 600px;
     max-height: 80vh;
     overflow-y: auto;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-color);
 }
 
 .modal-header {
@@ -232,12 +253,12 @@
     justify-content: space-between;
     align-items: center;
     padding: 1.5rem;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .modal-header h2 {
     margin: 0;
-    color: #1f2937;
+    color: var(--text-primary);
     font-size: 1.5rem;
 }
 
@@ -245,7 +266,7 @@
     background: none;
     border: none;
     font-size: 1.5rem;
-    color: #6b7280;
+    color: var(--text-muted);
     cursor: pointer;
     padding: 0.5rem;
     border-radius: 6px;
@@ -253,17 +274,17 @@
 }
 
 .close-button:hover {
-    background-color: #f3f4f6;
-    color: #1f2937;
+    background-color: var(--bg-hover);
+    color: var(--text-primary);
 }
 
 .modal-body {
     padding: 1.5rem;
-    color: #4b5563;
+    color: var(--text-secondary);
 }
 
 .modal-body h3 {
-    color: #1f2937;
+    color: var(--text-primary);
     margin: 1.5rem 0 0.75rem;
     font-size: 1.25rem;
 }

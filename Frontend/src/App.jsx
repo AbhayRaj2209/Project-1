@@ -8,6 +8,7 @@ import Dashboard from './Dashboard';
 import TemplatePage from './components/TemplatePage';
 import ResumeBuilderPage from './ResumeBuilderPage'; 
 import GettingStartedPage from './GettingStartedPage'; // Import the new page
+import ATSScoreChecker from './components/ATSScoreChecker';
 import MainLayout from './Layouts/MainLayout';
 
 const isLoggedIn = () => {
@@ -40,6 +41,10 @@ function App() {
                 <Route
                     path="/templates"
                     element={<ProtectedRoute><TemplatePage /></ProtectedRoute>}
+                />
+                <Route
+                    path="/ats-checker"
+                    element={<ProtectedRoute><ATSScoreChecker /></ProtectedRoute>}
                 />
                 <Route
                     path="/editor"

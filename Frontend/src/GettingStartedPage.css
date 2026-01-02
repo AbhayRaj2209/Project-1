@@ -1,118 +1,327 @@
 /* src/GettingStartedPage.css */
 .getting-started-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100vw;
     min-height: 100vh;
-    padding: 0 2rem; /* Remove vertical padding */
-    background-color: #f7f9fc;
-    box-sizing: border-box;
-    overflow-x: hidden; /* Prevent horizontal scroll */
+    padding: 2rem;
+    background: var(--bg-primary);
+    overflow-x: hidden;
 }
 
-.getting-started-content {
-    /* Increased max-width for a fuller look on desktops */
-    max-width: 1200px; 
-    width: 100%;
+/* Hero Section */
+.gs-hero-section {
     text-align: center;
-    background-color: #ffffff;
-    padding: 4rem; /* More internal padding */
-    border-radius: 16px; /* Softer corners */
-    box-shadow: 0 8px 30px rgba(0,0,0,0.08); /* A more subtle shadow */
+    max-width: 800px;
+    margin: 0 auto 4rem;
+    padding-top: 2rem;
 }
 
-.getting-started-content h1 {
-    font-size: 2.5rem; /* Larger title */
-    font-weight: 700; /* Bolder */
-    color: #111827;
-    margin-bottom: 4rem;
+.gs-badge {
+    display: inline-block;
+    padding: 0.5rem 1.25rem;
+    background: var(--gradient-bg);
+    border: 1px solid var(--border-light);
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--primary);
+    margin-bottom: 1.5rem;
+    animation: fadeInDown 0.6s ease;
+}
+
+.gs-title {
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+    animation: fadeInUp 0.6s ease 0.1s backwards;
+}
+
+.gradient-text {
+    color: var(--primary);
+}
+
+.gs-subtitle {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    max-width: 600px;
+    margin: 0 auto;
+    animation: fadeInUp 0.6s ease 0.2s backwards;
+}
+
+/* Section Title */
+.gs-section-title {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 2.5rem;
+}
+
+/* Steps Section */
+.gs-steps-section {
+    max-width: 1100px;
+    margin: 0 auto 4rem;
 }
 
 .steps-container {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: flex-start;
-    position: relative;
-    margin-bottom: 4rem;
-    gap: 2rem; /* Add gap for spacing */
+    gap: 1rem;
 }
 
-.step {
+.step-card {
     flex: 1;
-    max-width: 300px; /* Allow steps to be a bit wider */
+    max-width: 320px;
+    background: var(--bg-card);
+    border-radius: 20px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-color);
+    position: relative;
+    transition: all 0.3s ease;
+    animation: fadeInUp 0.6s ease backwards;
+}
+
+.step-card:nth-child(1) { animation-delay: 0.1s; }
+.step-card:nth-child(3) { animation-delay: 0.2s; }
+.step-card:nth-child(5) { animation-delay: 0.3s; }
+
+.step-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px var(--accent-glow);
+    border-color: var(--primary);
+}
+
+.step-number {
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 36px;
+    height: 36px;
+    background: var(--gradient-primary);
+    border-radius: 50%;
     display: flex;
-    flex-direction: column;
     align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--text-on-gradient);
+    box-shadow: 0 4px 12px var(--accent-glow, rgba(79, 70, 229, 0.4));
 }
 
 .step-icon-wrapper {
     width: 80px;
     height: 80px;
-    border-radius: 50%;
+    border-radius: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 1.5rem;
-    background-color: #eef2ff; 
+    margin: 0.5rem auto 1.5rem;
+    background: var(--bg-tertiary);
+    transition: all 0.3s ease;
+}
+
+.step-card:hover .step-icon-wrapper {
+    background: var(--gradient-bg);
+    transform: scale(1.1);
 }
 
 .step-icon {
     width: 40px;
     height: 40px;
-    color: #4f46e5; 
+    color: var(--primary);
 }
 
-.step h3 {
+.step-card h3 {
     font-size: 1.25rem;
-    font-weight: 500;
-    color: #111827;
+    font-weight: 700;
+    color: var(--text-primary);
     margin-bottom: 0.75rem;
 }
 
-.step p {
-    font-size: 1rem;
-    color: #6b7280;
+.step-card p {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
     line-height: 1.6;
+    margin: 0;
 }
 
 .step-connector {
-    flex-grow: 1;
-    height: 2px;
-    background-image: linear-gradient(to right, #d1d5db 50%, transparent 50%);
-    background-size: 8px 2px;
-    margin: 0 1rem;
-    position: relative;
-    top: 40px; 
+    display: flex;
+    align-items: center;
+    padding-top: 4rem;
+}
+
+.step-connector svg {
+    width: 32px;
+    height: 32px;
+    color: var(--text-muted);
+}
+
+/* Features Section */
+.gs-features-section {
+    max-width: 1000px;
+    margin: 0 auto 4rem;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+
+.feature-card {
+    background: var(--bg-card);
+    border-radius: 16px;
+    padding: 2rem;
+    text-align: center;
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+    animation: fadeInUp 0.6s ease backwards;
+}
+
+.feature-card:nth-child(1) { animation-delay: 0.3s; }
+.feature-card:nth-child(2) { animation-delay: 0.4s; }
+.feature-card:nth-child(3) { animation-delay: 0.5s; }
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--primary);
+}
+
+.feature-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.feature-card h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.feature-card p {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* CTA Section */
+.gs-cta-section {
+    text-align: center;
+    padding: 2rem 0;
+    animation: fadeInUp 0.6s ease 0.6s backwards;
 }
 
 .continue-button {
-    padding: 0.8rem 2.5rem;
-    font-size: 1.1rem;
-    font-weight: 500;
-    color: white;
-    background-color: #4f46e5;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 2.5rem;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-on-gradient);
+    background: var(--gradient-primary);
     border: none;
-    border-radius: 8px;
+    border-radius: 14px;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 24px var(--accent-glow, rgba(79, 70, 229, 0.35));
 }
 
 .continue-button:hover {
-    background-color: #4338ca;
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 12px 32px var(--accent-glow, rgba(79, 70, 229, 0.45));
 }
 
-/* Responsive adjustments for smaller screens (tablets/mobiles) */
+.continue-button svg {
+    width: 22px;
+    height: 22px;
+    transition: transform 0.3s ease;
+}
+
+.continue-button:hover svg {
+    transform: translateX(4px);
+}
+
+.gs-cta-note {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+/* Animations */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive */
 @media (max-width: 992px) {
     .steps-container {
         flex-direction: column;
         align-items: center;
-        gap: 3rem; /* More gap on smaller screens */
+        gap: 2rem;
     }
+    
     .step-connector {
         display: none;
     }
-    .getting-started-content {
-        padding: 2.5rem;
+    
+    .step-card {
+        max-width: 400px;
+        width: 100%;
+    }
+    
+    .features-grid {
+        grid-template-columns: 1fr;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+    
+    .gs-title {
+        font-size: 2.25rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .getting-started-container {
+        padding: 1rem;
+    }
+    
+    .gs-title {
+        font-size: 1.85rem;
+    }
+    
+    .gs-subtitle {
+        font-size: 1rem;
+    }
+    
+    .step-card {
+        padding: 1.5rem;
     }
 }

@@ -23,17 +23,18 @@ const ClassicTemplate = ({ resumeData }) => {
                 <div className="header-left">
                     <img src="https://upload.wikimedia.org/wikipedia/en/thumb/c/c3/Rajiv_Gandhi_Institute_of_Petroleum_Technology_logo.png/220px-Rajiv_Gandhi_Institute_of_Petroleum_Technology_logo.png" alt="Institute Logo" className="logo-img" />
                     <div className="header-title">
-                        <h1>{resumeData.name || 'Abhay Raj'}</h1>
-                        <p>{resumeData.rollNo || 'Roll No:-23IT3001'}</p>
-                        <p>{resumeData.degree || 'Bachelor of Technology, Information Technology'}</p>
-                        <p>{resumeData.university || 'Rajiv Gandhi Institute of Petroleum Technology'}</p>
+                        <h1>{resumeData.name || 'Your Name'}</h1>
+                        {resumeData.rollNo && <p>{resumeData.rollNo}</p>}
+                        {resumeData.degree && <p>{resumeData.degree}</p>}
+                        {resumeData.university && <p>{resumeData.university}</p>}
+                        {resumeData.location && <p>{resumeData.location}</p>}
                     </div>
                 </div>
                 <div className="header-right">
-                    <p><a href={`tel:${resumeData.phone}`}>{resumeData.phone || '+91-9076906408'}</a></p>
-                    <p><a href={`mailto:${resumeData.email}`}>{resumeData.email || 'abhayraj3051@gmail.com'}</a></p>
-                    <p><a href={resumeData.github} target="_blank" rel="noopener noreferrer">GitHub</a></p>
-                    <p><a href={resumeData.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a></p>
+                    {resumeData.phone && <p><a href={`tel:${resumeData.phone}`}>{resumeData.phone}</a></p>}
+                    {resumeData.email && <p><a href={`mailto:${resumeData.email}`}>{resumeData.email}</a></p>}
+                    {resumeData.github && <p><a href={resumeData.github} target="_blank" rel="noopener noreferrer">GitHub</a></p>}
+                    {resumeData.linkedin && <p><a href={resumeData.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a></p>}
                 </div>
             </header>
 

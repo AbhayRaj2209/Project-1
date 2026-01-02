@@ -7,7 +7,7 @@ const MainLayout = ({ children }) => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <Header />
-      <main style={{ flex: 1, width: '100%' }}>
+      <main style={{ flex: 1, width: '100%', paddingTop: '0' }}>
         {children}
       </main>
       <Footer />

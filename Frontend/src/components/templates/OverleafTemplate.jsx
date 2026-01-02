@@ -5,45 +5,54 @@ import './OverleafTemplate.css';
 const OverleafTemplate = ({ resumeData = {} }) => {
     const {
         name = 'Your Name',
-        title = 'Professional Title',
-        contact = {},
+        email = '',
+        phone = '',
+        linkedin = '',
+        github = '',
+        location = '',
         summary = '',
-        experience = [],
-        education = [],
-        skills = [],
+        experience = '',
+        education = '',
+        skills = '',
         projects = [],
-        achievements = []
-        , logoUrl = '',
+        achievements = '',
+        logoUrl = '',
         themeColor = '#4f46e5',
         backgroundImage = ''
     } = resumeData;
+
+    // Parse skills if it's a string
+    const skillsArray = typeof skills === 'string' ? skills.split(',').map(s => s.trim()).filter(Boolean) : (Array.isArray(skills) ? skills : []);
+    const achievementsArray = typeof achievements === 'string' ? achievements.split('\n').map(s => s.trim()).filter(Boolean) : (Array.isArray(achievements) ? achievements : []);
+    const projectsArray = Array.isArray(projects) ? projects : [];
 
     return (
         <div className="overleaf-root" style={{ ['--ov-theme']: themeColor, backgroundImage: backgroundImage ? `url(${backgroundImage})` : 'none' }}>
             <aside className="ov-left">
                 <div className="ov-left-inner">
                     <div className="ov-name">{name}</div>
-                    <div className="ov-title">{title}</div>
+                    {location && <div className="ov-title">{location}</div>}
 
                     <div className="ov-section">
                         <h4>Contact</h4>
-                        <p>{contact.email}</p>
-                        <p>{contact.phone}</p>
-                        {contact.website && <p>{contact.website}</p>}
+                        {email && <p>{email}</p>}
+                        {phone && <p>{phone}</p>}
+                        {linkedin && <p><a href={linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a></p>}
+                        {github && <p><a href={github} target="_blank" rel="noopener noreferrer">GitHub</a></p>}
                     </div>
 
                     <div className="ov-section">
                         <h4>Skills</h4>
                         <ul className="ov-list">
-                            {skills.slice(0, 12).map((s, i) => <li key={i}>{s}</li>)}
+                            {skillsArray.slice(0, 12).map((s, i) => <li key={i}>{s}</li>)}
                         </ul>
                     </div>
 
-                    {achievements.length > 0 && (
+                    {achievementsArray.length > 0 && (
                         <div className="ov-section">
                             <h4>Achievements</h4>
                             <ul className="ov-list">
-                                {achievements.map((a, i) => <li key={i}>{a}</li>)}
+                                {achievementsArray.map((a, i) => <li key={i}>{a}</li>)}
                             </ul>
                         </div>
                     )}
@@ -66,7 +75,7 @@ const OverleafTemplate = ({ resumeData = {} }) => {
                         </div>
                         <div className="ov-header-right">
                             <div className="ov-header-name">{name}</div>
-                            <div className="ov-header-title">{title}</div>
+                            {location && <div className="ov-header-title">{location}</div>}
                         </div>
                     </div>
                     {summary && (
@@ -76,39 +85,43 @@ const OverleafTemplate = ({ resumeData = {} }) => {
                         </section>
                     )}
 
-                    <section className="ov-block">
-                        <h3>Experience</h3>
-                        {experience.length === 0 && <p className="muted">No experience added yet</p>}
-                        {experience.map((exp, idx) => (
-                            <div className="exp-item" key={idx}>
-                                <div className="exp-head">
-                                    <strong>{exp.role}</strong>
-                                    <span className="exp-date">{exp.period}</span>
+                    {experience && (
+                        <section className="ov-block">
+                            <h3>Experience</h3>
+                            <div className="section-text">
+                                {experience.split('\n').map((line, idx) => (
+                                    <p key={idx}>{line}</p>
+                                ))}
+                            </div>
+                        </section>
+                    )}
+
+                    {projectsArray.length > 0 && (
+                        <section className="ov-block">
+                            <h3>Projects</h3>
+                            {projectsArray.map((p, i) => (
+                                <div className="proj-item" key={i}>
+                                    <div className="proj-head">
+                                        <strong>{p.title}</strong> 
+                                        {p.link && <span className="proj-link"><a href={p.link} target="_blank" rel="noreferrer">Link</a></span>}
+                                    </div>
+                                    <p className="proj-desc">{p.description}</p>
+                                    {p.technologies && <p className="proj-tech">{p.technologies}</p>}
                                 </div>
-                                <div className="exp-company">{exp.company}</div>
-                                <p className="exp-desc">{exp.description}</p>
-                            </div>
-                        ))}
-                    </section>
+                            ))}
+                        </section>
+                    )}
 
-                    <section className="ov-block">
-                        <h3>Projects</h3>
-                        {projects.map((p, i) => (
-                            <div className="proj-item" key={i}>
-                                <div className="proj-head"><strong>{p.name}</strong> <span className="proj-link">{p.github && <a href={p.github} target="_blank" rel="noreferrer">Git</a>}</span></div>
-                                <p className="proj-desc">{p.summary}</p>
+                    {education && (
+                        <section className="ov-block">
+                            <h3>Education</h3>
+                            <div className="section-text">
+                                {education.split('\n').map((line, idx) => (
+                                    <p key={idx}>{line}</p>
+                                ))}
                             </div>
-                        ))}
-                    </section>
-
-                    <section className="ov-block">
-                        <h3>Education</h3>
-                        {education.map((ed, i) => (
-                            <div className="edu-item" key={i}>
-                                <div className="edu-head"><strong>{ed.degree}</strong> <span className="edu-date">{ed.period}</span></div>
-                                <div className="edu-school">{ed.institution}</div>
-                            </div>
-                        ))}
+                        </section>
+                    )}
                     </section>
                 </div>
             </main>

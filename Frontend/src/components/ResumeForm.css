@@ -1,79 +1,253 @@
-/* src/components/ResumeForm.css */
+/* src/components/ResumeForm.css - Modern Resume Builder Form */
 .resume-form {
-    padding: 10px;
+    padding: 20px;
     height: 100%;
-    overflow-y: auto; /* Allows the form to scroll if it gets too long */
+    overflow-y: auto;
+    background: var(--bg-primary);
+    transition: background-color 0.3s ease;
+}
+
+.form-header {
+    background: var(--gradient-primary);
+    color: white;
+    padding: 30px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+}
+
+.form-header h2 {
+    margin: 0 0 8px 0;
+    font-size: 1.8rem;
+}
+
+.form-header p {
+    margin: 0;
+    opacity: 0.9;
+    font-size: 1rem;
 }
 
 .resume-form fieldset {
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 25px;
-    background-color: #f9fafb;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 20px;
+    background-color: var(--bg-card);
+    box-shadow: var(--shadow-md);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .resume-form legend {
-    padding: 0 10px;
-    font-weight: 600;
-    color: #4f46e5;
-    font-size: 1.1rem;
+    padding: 0 15px;
+    font-weight: 700;
+    color: var(--primary);
+    font-size: 1.2rem;
 }
 
 .resume-form .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 18px;
+}
+
+.resume-form .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
 }
 
 .resume-form label {
     display: block;
-    margin-bottom: 5px;
-    font-weight: 500;
-    color: #374151;
-    font-size: 0.9rem;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 0.95rem;
 }
 
 .resume-form input,
-.resume-form textarea {
+.resume-form textarea,
+.resume-form select {
     width: 100%;
-    padding: 12px;
+    padding: 12px 15px;
     font-size: 1rem;
-    border: 1px solid #d1d5db;
-    border-radius: 6px;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    background-color: #fff;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    font-family: inherit;
 }
 
 .resume-form input:focus,
-.resume-form textarea:focus {
-    border-color: #4f46e5;
+.resume-form textarea:focus,
+.resume-form select:focus {
+    border-color: var(--primary);
     outline: none;
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+    transform: translateY(-1px);
 }
 
 .resume-form textarea {
     resize: vertical;
-    min-height: 80px;
+    min-height: 100px;
 }
 
+/* Project Items */
 .project-item {
-    border: 1px dashed #e5e7eb;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 6px;
-    background: #fff;
+    border: 2px solid var(--border-color);
+    padding: 20px;
+    margin-bottom: 15px;
+    border-radius: 12px;
+    background: var(--bg-tertiary);
+    position: relative;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
-.project-item input,
-.project-item textarea {
-    margin-bottom: 8px;
-}
-.project-actions {
+
+.project-header {
     display: flex;
-    gap: 8px;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
 }
-.small-btn {
-    background: #efefef;
-    border: 1px solid #ddd;
-    padding: 6px 10px;
-    border-radius: 6px;
+
+.project-header h4 {
+    margin: 0;
+    color: var(--primary);
+    font-size: 1.1rem;
+}
+
+.remove-btn {
+    background: #fee2e2;
+    color: #dc2626;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
     cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.remove-btn:hover {
+    background: #fecaca;
+    transform: scale(1.1);
+}
+
+.add-btn {
+    background: var(--gradient-primary);
+    color: var(--text-on-gradient);
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    width: 100%;
+    transition: all 0.3s ease;
+}
+
+.add-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px var(--accent-glow, rgba(102, 126, 234, 0.4));
+}
+
+/* Form Actions */
+.form-actions {
+    position: sticky;
+    bottom: 0;
+    background: var(--bg-card);
+    padding: 20px;
+    border-top: 2px solid var(--border-color);
+    margin: 0 -20px -20px -20px;
+    border-radius: 0 0 12px 12px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.save-main-btn {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    padding: 15px 32px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 1.1rem;
+    width: 100%;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+}
+
+.save-main-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .resume-form .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-header {
+        padding: 20px;
+    }
+    
+    .form-header h2 {
+        font-size: 1.4rem;
+    }
+    
+    .resume-form fieldset {
+        padding: 15px;
+    }
+}
+
+/* Smooth Scrollbar */
+.resume-form::-webkit-scrollbar {
+    width: 8px;
+}
+
+.resume-form::-webkit-scrollbar-track {
+    background: var(--bg-tertiary);
+}
+
+.resume-form::-webkit-scrollbar-thumb {
+    background: var(--gradient-primary);
+    border-radius: 4px;
+}
+
+.resume-form::-webkit-scrollbar-thumb:hover {
+    background: var(--gradient-primary);
+}
+
+.keyword-list.found li {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+}
+
+.keyword-list.missing li {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+
+.ats-feedback {
+    margin-top: 20px;
+}
+
+.ats-feedback h4 {
+    color: var(--text-primary);
+    margin: 15px 0 10px 0;
+}
+
+.ats-feedback p {
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin: 10px 0;
+}
+
+.ats-feedback ul {
+    margin: 10px 0;
+    padding-left: 20px;
+}
+
+.ats-feedback li {
+    color: var(--text-secondary);
+    margin: 5px 0;
 }
