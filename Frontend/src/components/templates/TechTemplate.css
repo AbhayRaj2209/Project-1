@@ -1,0 +1,261 @@
+/* Tech Developer Resume Template */
+
+.tech-resume {
+    width: 100%;
+    max-width: 8.5in;
+    height: 11in;
+    margin: 0 auto;
+    background: #0d1117;
+    color: #e6edf3;
+    font-family: 'Fira Code', 'Courier New', monospace;
+    font-size: 9.5px;
+    line-height: 1.5;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 40px rgba(79, 70, 229, 0.2);
+}
+
+/* Header */
+.tech-header {
+    background: linear-gradient(135deg, #161b22 0%, #0d1117 100%);
+    border-bottom: 2px solid #30363d;
+    padding: 25px 30px;
+}
+
+.tech-header-top {
+    margin-bottom: 15px;
+}
+
+.tech-code-block {
+    font-size: 11px;
+    color: #79c0ff;
+    margin-bottom: 8px;
+}
+
+.tech-code-tag {
+    color: #ff7b72;
+}
+
+.tech-code-name {
+    color: #79c0ff;
+}
+
+.tech-name {
+    font-size: 22px;
+    margin: 0 0 5px 0;
+    font-weight: bold;
+    color: #58a6ff;
+    letter-spacing: 1px;
+}
+
+.tech-role {
+    color: #8b949e;
+    margin: 0;
+    font-size: 10px;
+}
+
+.tech-contact-bar {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    font-size: 9px;
+    color: #79c0ff;
+}
+
+/* Main Content */
+.tech-main {
+    display: flex;
+    flex: 1;
+    gap: 0;
+}
+
+/* Sidebar */
+.tech-sidebar {
+    width: 30%;
+    background: #161b22;
+    padding: 25px 20px;
+    border-right: 2px solid #30363d;
+    overflow-y: auto;
+}
+
+.tech-section {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px dashed #30363d;
+}
+
+.tech-section:last-child {
+    border-bottom: none;
+}
+
+.tech-section-title {
+    font-size: 10px;
+    color: #79c0ff;
+    margin: 0 0 10px 0;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.tech-bracket {
+    color: #ff7b72;
+    margin-right: 5px;
+}
+
+.tech-tag-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.tech-tag {
+    display: inline-block;
+    background: #0d419f;
+    color: #79c0ff;
+    border: 1px solid #1f6feb;
+    padding: 3px 7px;
+    border-radius: 2px;
+    font-size: 8px;
+}
+
+.tech-section p {
+    color: #8b949e;
+    margin: 5px 0;
+    font-size: 9px;
+}
+
+.tech-section a {
+    color: #58a6ff;
+    text-decoration: none;
+    border-bottom: 1px dotted #58a6ff;
+}
+
+/* Content Area */
+.tech-content {
+    flex: 1;
+    padding: 25px 30px;
+    overflow-y: auto;
+}
+
+.tech-main-section {
+    margin-bottom: 18px;
+}
+
+.tech-main-title {
+    font-size: 10px;
+    color: #79c0ff;
+    margin: 0 0 8px 0;
+    font-weight: bold;
+}
+
+.tech-text {
+    color: #8b949e;
+    font-size: 9px;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.tech-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.tech-item {
+    font-size: 9px;
+    color: #8b949e;
+    margin-bottom: 3px;
+}
+
+.tech-indent {
+    color: #ff7b72;
+    margin-right: 6px;
+}
+
+.tech-project {
+    background: rgba(79, 70, 229, 0.1);
+    border-left: 2px solid #58a6ff;
+    padding: 8px 12px;
+    margin-bottom: 8px;
+    border-radius: 2px;
+}
+
+.tech-project strong {
+    color: #58a6ff;
+}
+
+.tech-github-link {
+    color: #79c0ff;
+    text-decoration: none;
+    font-size: 8px;
+    margin-left: 8px;
+    border: 1px solid #1f6feb;
+    padding: 2px 5px;
+    border-radius: 2px;
+}
+
+.tech-project-desc {
+    color: #8b949e;
+    font-size: 8.5px;
+    margin-top: 3px;
+    padding-left: 12px;
+}
+
+.tech-achievement-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.tech-achievement-list li {
+    font-size: 9px;
+    color: #8b949e;
+    margin-bottom: 4px;
+    padding-left: 12px;
+    position: relative;
+}
+
+.tech-achievement-list li:before {
+    content: "◆";
+    position: absolute;
+    left: 0;
+    color: #79c0ff;
+}
+
+/* Footer */
+.tech-footer {
+    background: #161b22;
+    border-top: 2px solid #30363d;
+    padding: 12px 30px;
+    text-align: center;
+    font-size: 9px;
+    color: #79c0ff;
+}
+
+.tech-code-closing {
+    color: #ff7b72;
+}
+
+@media print {
+    .tech-resume {
+        box-shadow: none;
+        max-width: 100%;
+        height: auto;
+    }
+}
+
+@media (max-width: 900px) {
+    .tech-resume {
+        max-width: 100%;
+    }
+
+    .tech-main {
+        flex-direction: column;
+    }
+
+    .tech-sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 2px solid #30363d;
+    }
+}

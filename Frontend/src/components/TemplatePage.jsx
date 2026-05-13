@@ -37,6 +37,14 @@ const templates = [
         icon: '🎓'
     },
     {
+        id: 'jakes',
+        name: "Jake's Professional",
+        description: 'Clean, modern design with premium appearance',
+        category: 'Professional',
+        color: '#1e40af',
+        icon: '⭐'
+    },
+    {
         id: 'executive',
         name: 'Executive Elite',
         description: 'Premium design for senior positions',

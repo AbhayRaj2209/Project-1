@@ -1,8 +1,8 @@
 // routes/resumeRoutes.js
 import express from 'express';
-// ✅ Import AI functions (suggestions) from suggestionController
+//  Import AI functions (suggestions) from suggestionController
 import { getSuggestions } from '../controllers/suggestionController.js';
-// ✅ Import CRUD functions from the dedicated resumeController
+// Import CRUD functions from the dedicated resumeController
 import { saveResume, getResumeById, getAllResumes, deleteResume, updateResume } from '../controllers/resumeController.js';
 
 const router = express.Router();

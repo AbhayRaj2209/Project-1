@@ -1,3 +1,4 @@
+
 import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema({
@@ -7,11 +8,22 @@ const userSchema = new mongoose.Schema({
         unique: true,
         lowercase: true
     },
-    password: {
+    password: {  // optional for OAuth users
         type: String,
-        required: true
-    }
+        required: false
+    },
+    googleId: {
+        type: String,
+        unique: true,
+        sparse: true
+    },
+    githubId: {
+        type: String,
+        unique: true,
+        sparse: true
+    },
+    displayName: String
 });
 
-// module.exports = mongoose.model('User', userSchema);
 export default mongoose.model('User', userSchema);
+

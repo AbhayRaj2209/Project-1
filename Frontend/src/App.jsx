@@ -1,15 +1,15 @@
-// src/App.jsx
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
-// Import all your page components
 import AuthPage from './AuthPage'; 
 import Dashboard from './Dashboard';
 import TemplatePage from './components/TemplatePage';
 import ResumeBuilderPage from './ResumeBuilderPage'; 
-import GettingStartedPage from './GettingStartedPage'; // Import the new page
+import GettingStartedPage from './GettingStartedPage'; 
 import ATSScoreChecker from './components/ATSScoreChecker';
 import MainLayout from './Layouts/MainLayout';
+// --- NEW IMPORT ---
+import LoginSuccess from './components/LoginSuccess'; 
 
 const isLoggedIn = () => {
     return localStorage.getItem('token') !== null;
@@ -26,10 +26,14 @@ function App() {
     return (
         <BrowserRouter>
             <Routes>
-                {/* Public route, no layout */}
+                {/* Public routes */}
                 <Route path="/login" element={<AuthPage />} />
+                
+                {/* --- NEW OAUTH HANDLER ROUTE --- */}
+                {/* This must be public so it can catch the token from the backend */}
+                <Route path="/login-success" element={<LoginSuccess />} />
 
-                {/* All protected routes will now have the header and footer */}
+                {/* Protected routes */}
                 <Route
                     path="/getting-started"
                     element={<ProtectedRoute><GettingStartedPage /></ProtectedRoute>}
@@ -50,6 +54,9 @@ function App() {
                     path="/editor"
                     element={<ProtectedRoute><ResumeBuilderPage /></ProtectedRoute>}
                 />
+                
+                {/* Catch-all redirect */}
+                <Route path="*" element={<Navigate to="/" />} />
             </Routes>
         </BrowserRouter>
     );
