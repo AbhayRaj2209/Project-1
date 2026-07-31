@@ -198,6 +198,32 @@
   transition: all 0.3s ease;
 }
 
+.password-input-wrapper {
+  position: relative;
+}
+
+.password-input-wrapper input {
+  padding-right: 3.25rem;
+}
+
+.password-toggle-btn {
+  position: absolute;
+  right: 0.6rem;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  color: var(--primary-light);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.2rem 0.3rem;
+}
+
+.password-toggle-btn:hover {
+  color: var(--primary-dark);
+}
+
 /* Dark Mode Input */
 @media (prefers-color-scheme: dark) {
   .form-group input {
@@ -303,7 +329,7 @@
 .toggle-view p {
   color: #475569;
   font-size: 0.95rem;
-  margin: 0;
+  margin: 0.35rem 0;
 }
 
 /* Dark Mode Toggle View */
@@ -322,6 +348,10 @@
   text-decoration: none;
   transition: all 0.3s ease;
   padding: 0 0.25rem;
+}
+
+.toggle-view .submit-btn {
+  margin-bottom: 0;
 }
 
 .toggle-view button:hover {

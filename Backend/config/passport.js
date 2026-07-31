@@ -13,11 +13,14 @@ const __dirname = path.dirname(__filename);
 // --- Explicitly load .env from the parent directory ---
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
+const googleCallbackUrl = process.env.GOOGLE_CALLBACK_URL || `http://localhost:${process.env.PORT || 5000}/api/auth/google/callback`;
+const githubCallbackUrl = process.env.GITHUB_CALLBACK_URL || `http://localhost:${process.env.PORT || 5000}/api/auth/github/callback`;
+
 // Strategy for Google
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: `http://localhost:${process.env.PORT || 5000}/api/auth/google/callback`
+    callbackURL: googleCallbackUrl
 }, async (accessToken, refreshToken, profile, done) => {
     try {
         let user = await User.findOne({ 
@@ -39,7 +42,7 @@ passport.use(new GoogleStrategy({
 passport.use(new GitHubStrategy({
     clientID: process.env.GITHUB_CLIENT_ID,
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    callbackURL: `http://localhost:${process.env.PORT || 5000}/api/auth/github/callback`
+    callbackURL: githubCallbackUrl
 }, async (accessToken, refreshToken, profile, done) => {
     try {
         const email = profile.emails?.[0]?.value || `${profile.username}@github.com`;
