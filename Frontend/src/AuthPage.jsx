@@ -3,7 +3,10 @@ import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import './LoginPage.css';
 
-axios.defaults.baseURL = 'http://localhost:5000';
+const API_BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000').replace(/\/$/, '');
+const API_ORIGIN = new URL(API_BASE_URL).origin;
+
+axios.defaults.baseURL = API_BASE_URL;
 
 function AuthPage() {
     const location = useLocation();
@@ -51,7 +54,7 @@ function AuthPage() {
     };
 
     const handleSocialLogin = (provider) => {
-        const authUrl = `http://localhost:5000/api/auth/${provider}`;
+        const authUrl = `${API_BASE_URL}/api/auth/${provider}`;
         const authWindow = window.open(authUrl, '_blank', 'width=500,height=600');
 
         if (!authWindow) {
@@ -60,7 +63,7 @@ function AuthPage() {
         }
 
         const handleMessage = (event) => {
-            if (event.origin !== 'http://localhost:5000') {
+            if (event.origin !== API_ORIGIN) {
                 return;
             }
             const { token } = event.data || {};

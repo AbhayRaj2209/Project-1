@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import './ATSChecker.css';
 
+const API_BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000').replace(/\/$/, '');
+
 // ATSChecker.jsx
 console.log('ATSChecker component loaded'); // Debug log
 
@@ -37,7 +39,7 @@ const ATSChecker = ({ resumeData }) => {
         setError('');
 
         try {
-            const response = await axios.post('http://localhost:5000/api/resume/ats-check', {
+            const response = await axios.post(`${API_BASE_URL}/api/resume/ats-check`, {
                 resumeContent: formatResumeContent(resumeData),
                 jobDescription: jobDescription
             });

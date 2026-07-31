@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import './ATSScoreChecker.css';
 
+const API_BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000').replace(/\/$/, '');
+
 const ATSScoreChecker = () => {
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState(null);
@@ -37,7 +39,7 @@ const ATSScoreChecker = () => {
             const formData = new FormData();
             formData.append('resume', pdfFile);
 
-            const response = await fetch('http://localhost:5000/api/ats/check', {
+            const response = await fetch(`${API_BASE_URL}/api/ats/check`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`

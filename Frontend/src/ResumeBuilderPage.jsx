@@ -9,6 +9,8 @@ import ResumePreview from './components/ResumePreview';
 import EditorControls from './components/EditorControls';
 import './index.css';
 
+const API_BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000').replace(/\/$/, '');
+
 const ResumeBuilderPage = () => {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
@@ -47,7 +49,7 @@ const ResumeBuilderPage = () => {
         try {
             setLoading(true);
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:5000/api/resume/${id}`, {
+            const response = await fetch(`${API_BASE_URL}/api/resume/${id}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -67,8 +69,8 @@ const ResumeBuilderPage = () => {
         try {
             const token = localStorage.getItem('token');
             const url = resumeId 
-                ? `http://localhost:5000/api/resume/${resumeId}`
-                : 'http://localhost:5000/api/resume/save';
+                ? `${API_BASE_URL}/api/resume/${resumeId}`
+                : `${API_BASE_URL}/api/resume/save`;
             
             const method = resumeId ? 'PUT' : 'POST';
             

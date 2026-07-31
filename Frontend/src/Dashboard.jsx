@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './Dashboard.css';
 
+const API_BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000').replace(/\/$/, '');
+
 const Dashboard = () => {
     const [resumes, setResumes] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -21,7 +23,7 @@ const Dashboard = () => {
     const fetchResumes = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:5000/api/resume/list', {
+            const response = await fetch(`${API_BASE_URL}/api/resume/list`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -42,7 +44,7 @@ const Dashboard = () => {
         
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:5000/api/resume/${id}`, {
+            const response = await fetch(`${API_BASE_URL}/api/resume/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`

@@ -13,8 +13,9 @@ const __dirname = path.dirname(__filename);
 // --- Explicitly load .env from the parent directory ---
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
-const googleCallbackUrl = process.env.GOOGLE_CALLBACK_URL || `http://localhost:${process.env.PORT || 5000}/api/auth/google/callback`;
-const githubCallbackUrl = process.env.GITHUB_CALLBACK_URL || `http://localhost:${process.env.PORT || 5000}/api/auth/github/callback`;
+const defaultBackendUrl = process.env.BACKEND_URL || `http://localhost:${process.env.PORT || 5000}`;
+const googleCallbackUrl = process.env.GOOGLE_CALLBACK_URL || `${defaultBackendUrl}/api/auth/google/callback`;
+const githubCallbackUrl = process.env.GITHUB_CALLBACK_URL || `${defaultBackendUrl}/api/auth/github/callback`;
 
 // Strategy for Google
 passport.use(new GoogleStrategy({
