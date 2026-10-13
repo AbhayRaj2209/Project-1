@@ -122,7 +122,6 @@ const OverleafTemplate = ({ resumeData = {} }) => {
                             </div>
                         </section>
                     )}
-                    </section>
                 </div>
             </main>
         </div>

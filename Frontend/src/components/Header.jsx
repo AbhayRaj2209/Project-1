@@ -1,81 +1,98 @@
 // src/components/Header.jsx
-import React, { useState, useEffect } from 'react';
-import { NavLink, Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { NavLink, Link, useLocation } from 'react-router-dom';
+import Icon from './Icon';
+import ThemeToggle from './ThemeToggle';
+import { logout } from '../utils/auth';
 import './Layout.css';
 
+const navItems = [
+    { to: '/', label: 'Dashboard', icon: 'home', end: true },
+    { to: '/templates', label: 'Templates', icon: 'grid' },
+    { to: '/ats-checker', label: 'ATS Checker', icon: 'target' },
+    { to: '/getting-started', label: 'Getting Started', icon: 'compass' },
+];
+
 const Header = () => {
-    const [mobileOpen, setMobileOpen] = useState(false);
-    const [theme, setTheme] = useState(() => {
-        return localStorage.getItem('theme') || 'light';
-    });
+    const [menuOpen, setMenuOpen] = useState(false);
+    const location = useLocation();
+
+    // Close the mobile menu whenever the route changes
+    useEffect(() => {
+        setMenuOpen(false);
+    }, [location.pathname, location.search]);
 
     useEffect(() => {
-        document.documentElement.setAttribute('data-theme', theme);
-        localStorage.setItem('theme', theme);
-    }, [theme]);
+        if (!menuOpen) return undefined;
+        const onKey = (e) => e.key === 'Escape' && setMenuOpen(false);
+        document.addEventListener('keydown', onKey);
+        return () => document.removeEventListener('keydown', onKey);
+    }, [menuOpen]);
 
-    const toggleTheme = () => {
-        setTheme(prev => prev === 'light' ? 'dark' : 'light');
-    };
-
-    const handleLogout = () => {
-        localStorage.removeItem('token');
-        window.location.href = '/login';
-    };
+    const linkClass = ({ isActive }) => `app-nav-link${isActive ? ' is-active' : ''}`;
 
     return (
-        <header className="app-header">
-            <div className="header-container">
-                <div className="logo-container">
-                    <div className="custom-logo">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path className="logo-primary" d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                            <path className="logo-secondary" d="M2 17L12 22L22 17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" opacity="0.7"/>
-                            <path className="logo-accent" d="M2 12L12 17L22 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" opacity="0.5"/>
-                        </svg>
-                        <div className="logo-text-container">
-                            <span className="logo-text">Smart Resume</span>
-                            <span className="logo-text-sub">Builder</span>
-                        </div>
-                    </div>
-                </div>
-                <button className="mobile-menu-button" aria-expanded={mobileOpen} aria-label="Toggle menu" onClick={() => setMobileOpen(v => !v)}>
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                </button>
+        <header className={`app-header${menuOpen ? ' menu-open' : ''}`}>
+            <div className="app-header-inner">
+                <Link to="/" className="app-brand" aria-label="Smart Resume Builder — home">
+                    <span className="app-brand-mark">
+                        <Icon name="logo" size={20} strokeWidth={2.2} />
+                    </span>
+                    <span className="app-brand-text">
+                        Smart Resume<span>Builder</span>
+                    </span>
+                </Link>
 
-                <nav className={`main-nav ${mobileOpen ? 'open' : ''}`} onClick={() => setMobileOpen(false)}>
-                    <NavLink to="/" end className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Dashboard</NavLink>
-                    <NavLink to="/templates" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Templates</NavLink>
-                    <NavLink to="/ats-checker" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>ATS Checker</NavLink>
-                    <NavLink to="/getting-started" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Getting Started</NavLink>
-                    <Link to="/editor?template=classic" className="nav-link">Create Resume</Link>
+                <nav className="app-nav" aria-label="Main">
+                    {navItems.map((item) => (
+                        <NavLink key={item.to} to={item.to} end={item.end} className={linkClass}>
+                            {item.label}
+                        </NavLink>
+                    ))}
                 </nav>
-                <div className="user-actions">
-                    <button onClick={toggleTheme} className="theme-toggle" aria-label="Toggle theme">
-                        {/* Sun Icon */}
-                        <svg className="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <circle cx="12" cy="12" r="5"></circle>
-                            <line x1="12" y1="1" x2="12" y2="3"></line>
-                            <line x1="12" y1="21" x2="12" y2="23"></line>
-                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                            <line x1="1" y1="12" x2="3" y2="12"></line>
-                            <line x1="21" y1="12" x2="23" y2="12"></line>
-                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-                        </svg>
-                        {/* Moon Icon */}
-                        <svg className="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                        </svg>
+
+                <div className="app-header-actions">
+                    <ThemeToggle />
+                    <Link to="/templates" className="ui-btn ui-btn--primary ui-btn--sm app-cta">
+                        <Icon name="plus" size={16} />
+                        <span>New resume</span>
+                    </Link>
+                    <button type="button" onClick={logout} className="ui-btn ui-btn--ghost ui-btn--sm app-logout">
+                        <Icon name="logout" size={16} />
+                        <span>Log out</span>
                     </button>
-                    <button onClick={handleLogout} className="logout-button-header">
-                        Logout
+                    <button
+                        type="button"
+                        className="ui-icon-btn app-menu-btn"
+                        aria-expanded={menuOpen}
+                        aria-controls="app-mobile-nav"
+                        aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+                        onClick={() => setMenuOpen((v) => !v)}
+                    >
+                        <Icon name={menuOpen ? 'x' : 'menu'} size={20} />
                     </button>
                 </div>
             </div>
+
+            <div id="app-mobile-nav" className="app-mobile-nav" hidden={!menuOpen}>
+                <nav aria-label="Mobile">
+                    {navItems.map((item) => (
+                        <NavLink key={item.to} to={item.to} end={item.end} className={linkClass}>
+                            <Icon name={item.icon} size={18} />
+                            {item.label}
+                        </NavLink>
+                    ))}
+                </nav>
+                <div className="app-mobile-actions">
+                    <Link to="/templates" className="ui-btn ui-btn--primary ui-btn--block">
+                        <Icon name="plus" size={16} /> New resume
+                    </Link>
+                    <button type="button" onClick={logout} className="ui-btn ui-btn--secondary ui-btn--block">
+                        <Icon name="logout" size={16} /> Log out
+                    </button>
+                </div>
+            </div>
+            {menuOpen && <div className="app-mobile-scrim" onClick={() => setMenuOpen(false)} aria-hidden="true" />}
         </header>
     );
 };

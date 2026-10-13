@@ -8,11 +8,12 @@ import ExecutiveTemplate from './templates/ExecutiveTemplate';
 import TechTemplate from './templates/TechTemplate';
 import DesignerTemplate from './templates/DesignerTemplate';
 import SimpleTemplate from './templates/SimpleTemplate';
+import OverleafTemplate from './templates/OverleafTemplate';
 
 const ResumePreview = ({ resumeData, templateId }) => {
-    
+
     const renderTemplate = () => {
-            switch (templateId) {
+        switch (templateId) {
             case 'classic':
                 return <ClassicTemplate resumeData={resumeData} />;
             case 'modern':
@@ -29,6 +30,8 @@ const ResumePreview = ({ resumeData, templateId }) => {
                 return <DesignerTemplate resumeData={resumeData} />;
             case 'simple':
                 return <SimpleTemplate resumeData={resumeData} />;
+            case 'overleaf':
+                return <OverleafTemplate resumeData={resumeData} />;
             default:
                 // If no template is specified, default to the classic one
                 return <ClassicTemplate resumeData={resumeData} />;

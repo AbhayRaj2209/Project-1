@@ -29,8 +29,10 @@
 .modern-main { padding: 6px 4px; }
 .modern-header h1 { margin: 0; font-size: 26px; color:var(--primary) }
 .modern-header .subtle { color:#6b7280; margin-top:6px }
-section { margin-top: 18px; }
-section h3 { margin:0 0 6px 0; font-size:15px; color:var(--primary) }
+/* These two rules were historically global and every template's layout relies on them.
+   :where() keeps the original (element-level) specificity while confining them to the resume paper. */
+:where(.ed-paper) section { margin-top: 18px; }
+:where(.ed-paper) section h3 { margin:0 0 6px 0; font-size:15px; color:var(--primary) }
 .section-content { color:#374151; line-height:1.5 }
 .proj-row { margin-bottom:10px }
 .proj-link { margin-left:8px; font-size:12px; color:var(--primary); text-decoration:none }

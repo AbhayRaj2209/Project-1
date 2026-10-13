@@ -1,251 +1,285 @@
 // src/components/ATSScoreChecker.jsx
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
+import Icon from './Icon';
+import { API_BASE_URL, authHeaders } from '../utils/auth';
 import './ATSScoreChecker.css';
 
-const API_BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000').replace(/\/$/, '');
+const MAX_SIZE_MB = 10;
+
+const formatSize = (bytes) => {
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+};
+
+const getScoreTone = (score) => {
+    if (score >= 80) return 'good';
+    if (score >= 60) return 'fair';
+    return 'poor';
+};
+
+const getScoreLabel = (score) => {
+    if (score >= 80) return 'Excellent';
+    if (score >= 70) return 'Good';
+    if (score >= 60) return 'Fair';
+    return 'Needs improvement';
+};
+
+const getScoreSummary = (score) => {
+    if (score >= 80) return 'Your resume is well-optimized for applicant tracking systems.';
+    if (score >= 60) return 'A solid base — a few targeted changes will improve your chances.';
+    return 'Several issues may stop ATS software from reading your resume correctly.';
+};
+
+const ScoreRing = ({ score }) => {
+    const radius = 54;
+    const circumference = 2 * Math.PI * radius;
+    const clamped = Math.max(0, Math.min(100, Number(score) || 0));
+    const offset = circumference * (1 - clamped / 100);
+    return (
+        <div className={`ats-ring ats-ring--${getScoreTone(clamped)}`}>
+            <svg viewBox="0 0 128 128" aria-hidden="true">
+                <circle className="ats-ring-track" cx="64" cy="64" r={radius} />
+                <circle
+                    className="ats-ring-value"
+                    cx="64"
+                    cy="64"
+                    r={radius}
+                    strokeDasharray={circumference}
+                    style={{ '--ring-offset': offset, '--ring-full': circumference }}
+                />
+            </svg>
+            <div className="ats-ring-label">
+                <strong>{clamped}</strong>
+                <span>/ 100</span>
+            </div>
+        </div>
+    );
+};
+
+const ResultList = ({ items, empty }) => (
+    <ul className="ats-list">
+        {items?.length > 0
+            ? items.map((item, idx) => <li key={idx}>{item}</li>)
+            : <li className="ats-list-empty">{empty}</li>}
+    </ul>
+);
 
 const ATSScoreChecker = () => {
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState(null);
-    const [fileName, setFileName] = useState('');
-    const [uploadLoading, setUploadLoading] = useState(false);
     const [pdfFile, setPdfFile] = useState(null);
+    const [error, setError] = useState('');
+    const [dragging, setDragging] = useState(false);
+    const inputRef = useRef(null);
 
-    const handleFileUpload = (e) => {
-        const file = e.target.files[0];
+    const selectFile = (file) => {
         if (!file) return;
+        setError('');
 
-        if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
-            setPdfFile(file);
-            setFileName(file.name);
-        } else {
-            alert('Please upload a PDF file only');
-            setPdfFile(null);
-            setFileName('');
+        const isPdf = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
+        if (!isPdf) {
+            setError('Please upload a PDF file only.');
+            return;
         }
+        if (file.size > MAX_SIZE_MB * 1024 * 1024) {
+            setError(`That file is ${formatSize(file.size)}. The maximum size is ${MAX_SIZE_MB} MB.`);
+            return;
+        }
+        setPdfFile(file);
+        setResult(null);
+    };
+
+    const clearFile = () => {
+        setPdfFile(null);
+        setResult(null);
+        setError('');
+        if (inputRef.current) inputRef.current.value = '';
+    };
+
+    const handleDrop = (e) => {
+        e.preventDefault();
+        setDragging(false);
+        selectFile(e.dataTransfer.files?.[0]);
     };
 
     const handleCheck = async () => {
         if (!pdfFile) {
-            alert('Please upload your resume first');
+            setError('Please upload your resume first.');
             return;
         }
 
         setLoading(true);
         setResult(null);
+        setError('');
 
         try {
-            const token = localStorage.getItem('token');
             const formData = new FormData();
             formData.append('resume', pdfFile);
 
             const response = await fetch(`${API_BASE_URL}/api/ats/check`, {
                 method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                },
-                body: formData
+                headers: authHeaders(),
+                body: formData,
             });
 
             const data = await response.json();
-            
+
             if (data.success) {
                 setResult(data.atsScore);
+                requestAnimationFrame(() => {
+                    document.getElementById('ats-results')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
             } else {
-                alert('Failed to analyze resume: ' + data.message);
+                setError(`Failed to analyze resume: ${data.message || 'Unknown error'}`);
             }
-        } catch (error) {
-            console.error('Error checking ATS score:', error);
-            alert('An error occurred while analyzing your resume');
+        } catch (err) {
+            console.error('Error checking ATS score:', err);
+            setError('An error occurred while analyzing your resume. Please try again.');
         } finally {
             setLoading(false);
         }
     };
 
-    const getScoreColor = (score) => {
-        if (score >= 80) return '#4caf50';
-        if (score >= 60) return '#ff9800';
-        return '#f44336';
-    };
-
-    const getScoreLabel = (score) => {
-        if (score >= 80) return 'Excellent';
-        if (score >= 70) return 'Good';
-        if (score >= 60) return 'Fair';
-        return 'Needs Improvement';
-    };
-
     return (
-        <div className="ats-checker-container">
-            <div className="ats-header">
-                <h2>🎯 ATS Score Checker</h2>
-                <p>Upload your PDF resume to get an AI-powered ATS compatibility score</p>
-            </div>
-
-            <div className="ats-input-section">
-                <div className="input-group">
-                    <label>Upload Resume (PDF only) *</label>
-                    <div className="file-upload-area">
-                        <input 
-                            type="file" 
-                            accept=".pdf,application/pdf"
-                            onChange={handleFileUpload}
-                            id="resume-file"
-                        />
-                        <label htmlFor="resume-file" className="file-upload-label">
-                            {pdfFile ? (
-                                <>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#4caf50" strokeWidth="2">
-                                        <polyline points="20 6 9 17 4 12"></polyline>
-                                    </svg>
-                                    <span>✅ {fileName}</span>
-                                    <span className="file-info">Ready to analyze</span>
-                                </>
-                            ) : (
-                                <>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                        <polyline points="14 2 14 8 20 8"></polyline>
-                                        <line x1="16" y1="13" x2="8" y2="13"></line>
-                                        <line x1="16" y1="17" x2="8" y2="17"></line>
-                                        <polyline points="10 9 9 9 8 9"></polyline>
-                                    </svg>
-                                    <span>Click to upload your resume PDF</span>
-                                    <span className="file-info">PDF files only • Max 10MB</span>
-                                </>
-                            )}
-                        </label>
-                    </div>
-                    {pdfFile && (
-                        <div className="file-preview">
-                            <p>✅ {fileName}</p>
-                            <button 
-                                className="clear-file-btn"
-                                onClick={() => {
-                                    setPdfFile(null);
-                                    setFileName('');
-                                    setResult(null);
-                                    document.getElementById('resume-file').value = '';
-                                }}
-                            >
-                                Clear & Upload New
-                            </button>
-                        </div>
-                    )}
+        <div className="ui-page ats">
+            <header className="ui-page-head ats-head">
+                <div>
+                    <span className="ui-eyebrow">ATS Score Checker</span>
+                    <h1>How well will your resume parse?</h1>
+                    <p>Upload your resume as a PDF to get an AI-powered compatibility score, plus strengths and specific fixes.</p>
                 </div>
+            </header>
 
-                <button 
-                    className="check-btn"
-                    onClick={handleCheck}
-                    disabled={loading || !pdfFile}
-                >
-                    {loading ? (
-                        <>
-                            <span className="spinner"></span>
-                            Analyzing...
-                        </>
-                    ) : (
-                        <>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                            Get ATS Score
-                        </>
-                    )}
-                </button>
+            <div className="ats-upload-card ui-card">
+                <input
+                    ref={inputRef}
+                    type="file"
+                    accept=".pdf,application/pdf"
+                    onChange={(e) => selectFile(e.target.files?.[0])}
+                    id="resume-file"
+                    className="sr-only"
+                />
+
+                {!pdfFile ? (
+                    <label
+                        htmlFor="resume-file"
+                        className={`ats-drop${dragging ? ' is-dragging' : ''}`}
+                        onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
+                        onDragLeave={() => setDragging(false)}
+                        onDrop={handleDrop}
+                    >
+                        <span className="ats-drop-icon"><Icon name="upload" size={26} /></span>
+                        <strong>
+                            <span className="ats-drop-cta">Click to upload</span> or drag and drop
+                        </strong>
+                        <span className="ats-drop-hint">PDF only · up to {MAX_SIZE_MB} MB</span>
+                    </label>
+                ) : (
+                    <div className="ats-file">
+                        <span className="ats-file-icon"><Icon name="file" size={22} /></span>
+                        <div className="ats-file-meta">
+                            <strong title={pdfFile.name}>{pdfFile.name}</strong>
+                            <span>{formatSize(pdfFile.size)} · Ready to analyze</span>
+                        </div>
+                        <button
+                            type="button"
+                            className="ui-icon-btn ui-icon-btn--plain"
+                            onClick={clearFile}
+                            aria-label="Remove file"
+                            title="Remove file"
+                            disabled={loading}
+                        >
+                            <Icon name="x" size={18} />
+                        </button>
+                    </div>
+                )}
+
+                {error && (
+                    <div className="ui-alert ui-alert--error" role="alert">
+                        <Icon name="alert" size={18} />
+                        <span>{error}</span>
+                    </div>
+                )}
+
+                <div className="ats-upload-foot">
+                    <p className="ats-privacy">
+                        <Icon name="shield" size={15} /> Your file is only used to generate this analysis.
+                    </p>
+                    <button
+                        type="button"
+                        className="ui-btn ui-btn--primary ui-btn--lg"
+                        onClick={handleCheck}
+                        disabled={loading || !pdfFile}
+                    >
+                        {loading ? (
+                            <>
+                                <span className="ui-spinner" /> Analyzing…
+                            </>
+                        ) : (
+                            <>
+                                <Icon name="sparkles" size={18} /> Get ATS score
+                            </>
+                        )}
+                    </button>
+                </div>
             </div>
+
+            {loading && (
+                <div className="ats-loading ui-card" aria-live="polite">
+                    <span className="ui-spinner ui-spinner--lg" />
+                    <div>
+                        <strong>Reading your resume…</strong>
+                        <p>Our AI is checking structure, keywords and formatting. This usually takes a few seconds.</p>
+                    </div>
+                </div>
+            )}
 
             {result && (
-                <div className="ats-results">
-                    <div className="score-section">
-                        <div className="score-circle" style={{ borderColor: getScoreColor(result.score) }}>
-                            <div className="score-value" style={{ color: getScoreColor(result.score) }}>
-                                {result.score}
-                            </div>
-                            <div className="score-label">{getScoreLabel(result.score)}</div>
+                <section id="ats-results" className="ats-results" aria-label="ATS analysis results">
+                    <div className={`ats-summary ui-card ats-summary--${getScoreTone(result.score)}`}>
+                        <ScoreRing score={result.score} />
+                        <div className="ats-summary-text">
+                            <span className="ats-score-badge">{getScoreLabel(result.score)}</span>
+                            <h2>Your ATS score is {result.score}</h2>
+                            <p>{getScoreSummary(result.score)}</p>
+                            <button type="button" className="ui-btn ui-btn--secondary ui-btn--sm" onClick={clearFile}>
+                                <Icon name="refresh" size={15} /> Check another resume
+                            </button>
                         </div>
                     </div>
 
-                    <div className="analysis-grid">
-                        <div className="analysis-card strengths">
-                            <h3>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                                Strengths
-                            </h3>
-                            <ul>
-                                {result.strengths?.length > 0 ? (
-                                    result.strengths.map((strength, idx) => (
-                                        <li key={idx}>{strength}</li>
-                                    ))
-                                ) : (
-                                    <li>Upload a complete resume for detailed analysis</li>
-                                )}
-                            </ul>
+                    <div className="ats-grid">
+                        <div className="ats-panel ats-panel--good ui-card">
+                            <h3><span><Icon name="checkCircle" size={18} /></span> Strengths</h3>
+                            <ResultList items={result.strengths} empty="Upload a complete resume for detailed analysis." />
                         </div>
 
-                        <div className="analysis-card improvements">
-                            <h3>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                                    <circle cx="12" cy="12" r="10"></circle>
-                                    <line x1="12" y1="8" x2="12" y2="12"></line>
-                                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                                </svg>
-                                Areas for Improvement
-                            </h3>
-                            <ul>
-                                {result.improvements?.length > 0 ? (
-                                    result.improvements.map((improvement, idx) => (
-                                        <li key={idx}>{improvement}</li>
-                                    ))
-                                ) : (
-                                    <li>🎉 Great job! No major improvements needed.</li>
-                                )}
-                            </ul>
+                        <div className="ats-panel ats-panel--warn ui-card">
+                            <h3><span><Icon name="alert" size={18} /></span> Areas for improvement</h3>
+                            <ResultList items={result.improvements} empty="Great job! No major improvements needed." />
                         </div>
 
                         {result.formatAnalysis && (
-                            <div className="analysis-card format">
-                                <h3>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                        <polyline points="14 2 14 8 20 8"></polyline>
-                                        <line x1="16" y1="13" x2="8" y2="13"></line>
-                                        <line x1="16" y1="17" x2="8" y2="17"></line>
-                                    </svg>
-                                    Format Analysis
-                                </h3>
-                                <p>{result.formatAnalysis}</p>
+                            <div className="ats-panel ats-panel--info ats-panel--wide ui-card">
+                                <h3><span><Icon name="file" size={18} /></span> Format analysis</h3>
+                                <p className="ats-panel-text">{result.formatAnalysis}</p>
                             </div>
                         )}
 
-                        <div className="analysis-card recommendations full-width">
-                            <h3>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                                </svg>
-                                Recommendations
-                            </h3>
-                            <ul>
-                                {result.recommendations?.length > 0 ? (
-                                    result.recommendations.map((rec, idx) => (
-                                        <li key={idx}>{rec}</li>
-                                    ))
-                                ) : (
-                                    <li>✨ Your resume looks great! Keep it updated.</li>
-                                )}
-                            </ul>
+                        <div className="ats-panel ats-panel--accent ats-panel--wide ui-card">
+                            <h3><span><Icon name="star" size={18} /></span> Recommendations</h3>
+                            <ResultList items={result.recommendations} empty="Your resume looks great! Keep it updated." />
                         </div>
                     </div>
 
                     {result.analysis && (
-                        <div className="detailed-analysis">
-                            <h3>📝 Detailed Analysis</h3>
-                            <div className="analysis-text">{result.analysis}</div>
+                        <div className="ats-panel ats-panel--wide ui-card">
+                            <h3><span><Icon name="edit" size={18} /></span> Detailed analysis</h3>
+                            <div className="ats-panel-text ats-analysis">{result.analysis}</div>
                         </div>
                     )}
-                </div>
+                </section>
             )}
         </div>
     );

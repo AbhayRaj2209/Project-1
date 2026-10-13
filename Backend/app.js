@@ -1,21 +1,34 @@
+import './config/env.js';
 import express from 'express';
 import cors from 'cors';
 import fileUpload from 'express-fileupload';
-import dotenv from 'dotenv';
 import passport from './config/passport.js';
+import { CORS_ORIGINS } from './config/env.js';
 import authRoutes from './routes/authRoutes.js';
 import resumeRoutes from './routes/resumeRoutes.js';
 import atsRoutes from './routes/atsRoutes.js';
 import { signup, login } from './controllers/authController.js';
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 
-dotenv.config();
-
 const app = express();
-const allowedOrigins = (process.env.CORS_ORIGINS || `${process.env.CLIENT_URL || 'http://localhost:5173'}`).split(',').map((origin) => origin.trim()).filter(Boolean);
+
+// Behind a hosting proxy (Render, Railway, Heroku...) so req.protocol/IP are correct
+app.set('trust proxy', 1);
+
+// Entries may contain a wildcard, e.g. https://*.vercel.app for preview deployments
+const originMatchers = CORS_ORIGINS.map((origin) => {
+  if (!origin.includes('*')) return (value) => value === origin;
+  const pattern = new RegExp(`^${origin.split('*').map((p) => p.replace(/[.+?^${}()|[\]\\]/g, '\\$&')).join('[^.]+')}$`);
+  return (value) => pattern.test(value);
+});
 
 app.use(cors({
-  origin: allowedOrigins,
+  origin: (origin, callback) => {
+    // Requests without an Origin header (curl, server-to-server, OAuth redirects) are allowed
+    if (!origin || originMatchers.some((matches) => matches(origin))) return callback(null, true);
+    console.warn(`CORS: blocked request from origin ${origin}. Add it to CORS_ORIGINS or CLIENT_URL.`);
+    return callback(null, false);
+  },
   credentials: true
 }));
 app.use(express.json({ limit: '10mb' }));

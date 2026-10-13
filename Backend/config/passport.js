@@ -2,62 +2,69 @@ import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { Strategy as GitHubStrategy } from 'passport-github2';
 import User from '../user.js';
-import dotenv from 'dotenv';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import { oauthConfig } from './env.js';
 
-// --- ES Module Fix for __dirname ---
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// Find the user by provider id, else by email (linking the provider to an
+// existing password account), else create a new one.
+const findOrCreateUser = async ({ providerField, providerId, email, displayName }) => {
+    const normalizedEmail = email.toLowerCase();
+    let user = await User.findOne({ $or: [{ [providerField]: providerId }, { email: normalizedEmail }] });
 
-// --- Explicitly load .env from the parent directory ---
-dotenv.config({ path: path.resolve(__dirname, '../.env') });
+    if (!user) {
+        return User.create({ [providerField]: providerId, email: normalizedEmail, displayName });
+    }
 
-const defaultBackendUrl = process.env.BACKEND_URL || `http://localhost:${process.env.PORT || 5000}`;
-const googleCallbackUrl = process.env.GOOGLE_CALLBACK_URL || `${defaultBackendUrl}/api/auth/google/callback`;
-const githubCallbackUrl = process.env.GITHUB_CALLBACK_URL || `${defaultBackendUrl}/api/auth/github/callback`;
+    if (!user[providerField]) user[providerField] = providerId;
+    if (!user.displayName && displayName) user.displayName = displayName;
+    user.lastLoginAt = new Date();
+    await user.save();
+    return user;
+};
 
-// Strategy for Google
-passport.use(new GoogleStrategy({
-    clientID: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: googleCallbackUrl
-}, async (accessToken, refreshToken, profile, done) => {
-    try {
-        let user = await User.findOne({ 
-            $or: [{ googleId: profile.id }, { email: profile.emails[0].value }] 
-        });
-
-        if (!user) {
-            user = await User.create({
-                googleId: profile.id,
-                email: profile.emails[0].value,
-                displayName: profile.displayName
+// Strategies are only registered when credentials are configured. Constructing a
+// strategy without a clientID throws, which previously crashed the whole server
+// (taking signup/login down with it) whenever these variables were missing.
+if (oauthConfig.google.enabled) {
+    passport.use(new GoogleStrategy({
+        clientID: oauthConfig.google.clientID,
+        clientSecret: oauthConfig.google.clientSecret,
+        callbackURL: oauthConfig.google.callbackURL,
+    }, async (accessToken, refreshToken, profile, done) => {
+        try {
+            const email = profile.emails?.[0]?.value;
+            if (!email) return done(null, false, { message: 'Your Google account did not share an email address.' });
+            const user = await findOrCreateUser({
+                providerField: 'googleId',
+                providerId: profile.id,
+                email,
+                displayName: profile.displayName,
             });
-        }
-        return done(null, user);
-    } catch (err) { return done(err, null); }
-}));
+            return done(null, user);
+        } catch (err) { return done(err, null); }
+    }));
+}
 
-// Strategy for GitHub
-passport.use(new GitHubStrategy({
-    clientID: process.env.GITHUB_CLIENT_ID,
-    clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    callbackURL: githubCallbackUrl
-}, async (accessToken, refreshToken, profile, done) => {
-    try {
-        const email = profile.emails?.[0]?.value || `${profile.username}@github.com`;
-        let user = await User.findOne({ $or: [{ githubId: profile.id }, { email }] });
-
-        if (!user) {
-            user = await User.create({
-                githubId: profile.id,
-                email: email,
-                displayName: profile.displayName || profile.username
+if (oauthConfig.github.enabled) {
+    passport.use(new GitHubStrategy({
+        clientID: oauthConfig.github.clientID,
+        clientSecret: oauthConfig.github.clientSecret,
+        callbackURL: oauthConfig.github.callbackURL,
+        // Needed on the strategy itself so passport-github2 fetches private emails
+        scope: ['user:email'],
+    }, async (accessToken, refreshToken, profile, done) => {
+        try {
+            const emails = profile.emails || [];
+            const email = (emails.find((e) => e.primary) || emails[0])?.value
+                || `${profile.username}@users.noreply.github.com`;
+            const user = await findOrCreateUser({
+                providerField: 'githubId',
+                providerId: profile.id,
+                email,
+                displayName: profile.displayName || profile.username,
             });
-        }
-        return done(null, user);
-    } catch (err) { return done(err, null); }
-}));
+            return done(null, user);
+        } catch (err) { return done(err, null); }
+    }));
+}
 
 export default passport;

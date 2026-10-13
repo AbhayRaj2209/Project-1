@@ -1,93 +1,18 @@
-// src/TemplatePage.jsx
+// src/components/TemplatePage.jsx
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import Icon from './Icon';
+import TemplateThumb from './TemplateThumb';
+import { templates, categories } from '../data/templates';
 import './TemplatePage.css';
-
-const templates = [
-    {
-        id: 'classic',
-        name: 'Classic Professional',
-        description: 'Traditional layout perfect for corporate jobs',
-        category: 'Professional',
-        color: '#2563eb',
-        icon: '📄'
-    },
-    {
-        id: 'modern',
-        name: 'Modern Minimalist',
-        description: 'Clean and contemporary design',
-        category: 'Modern',
-        color: '#7c3aed',
-        icon: '✨'
-    },
-    {
-        id: 'creative',
-        name: 'Creative Column',
-        description: 'Stand out with a unique two-column layout',
-        category: 'Creative',
-        color: '#db2777',
-        icon: '🎨'
-    },
-    {
-        id: 'overleaf',
-        name: 'Academic LaTeX',
-        description: 'Professional academic and research style',
-        category: 'Academic',
-        color: '#059669',
-        icon: '🎓'
-    },
-    {
-        id: 'jakes',
-        name: "Jake's Professional",
-        description: 'Clean, modern design with premium appearance',
-        category: 'Professional',
-        color: '#1e40af',
-        icon: '⭐'
-    },
-    {
-        id: 'executive',
-        name: 'Executive Elite',
-        description: 'Premium design for senior positions',
-        category: 'Executive',
-        color: '#ea580c',
-        icon: '👔'
-    },
-    {
-        id: 'tech',
-        name: 'Tech Stack',
-        description: 'Optimized for software engineers',
-        category: 'Tech',
-        color: '#0891b2',
-        icon: '💻'
-    },
-    {
-        id: 'designer',
-        name: 'Design Portfolio',
-        description: 'Showcase your creative work',
-        category: 'Creative',
-        color: '#c026d3',
-        icon: '🎭'
-    },
-    {
-        id: 'simple',
-        name: 'Simple & Clean',
-        description: 'Minimalist approach with maximum impact',
-        category: 'Modern',
-        color: '#65a30d',
-        icon: '📋'
-    }
-];
-
-const categories = ['All', 'Professional', 'Modern', 'Creative', 'Academic', 'Executive', 'Tech'];
 
 const TemplatePage = () => {
     const navigate = useNavigate();
     const [selectedCategory, setSelectedCategory] = useState('All');
-    const [hoveredTemplate, setHoveredTemplate] = useState(null);
 
-    const filteredTemplates = selectedCategory === 'All' 
-        ? templates 
-        : templates.filter(t => t.category === selectedCategory);
+    const filteredTemplates = selectedCategory === 'All'
+        ? templates
+        : templates.filter((t) => t.category === selectedCategory);
 
     const handleTemplateSelect = (templateId) => {
         // Navigate to the editor, passing the template ID
@@ -95,83 +20,73 @@ const TemplatePage = () => {
     };
 
     return (
-        <div className="template-page-container">
-            <div className="template-page-header">
-                <div className="header-top">
-                    <Link to="/" className="back-link">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <line x1="19" y1="12" x2="5" y2="12"></line>
-                            <polyline points="12 19 5 12 12 5"></polyline>
-                        </svg>
-                        Back to Dashboard
-                    </Link>
+        <div className="ui-page tpl">
+            <Link to="/" className="tpl-back">
+                <Icon name="arrowLeft" size={16} /> Dashboard
+            </Link>
+
+            <header className="ui-page-head tpl-head">
+                <div>
+                    <span className="ui-eyebrow">Templates</span>
+                    <h1>Choose a template</h1>
+                    <p>Every template is ATS-friendly and fully editable. You can switch templates at any time from the editor.</p>
                 </div>
-                <div className="header-content">
-                    <h1>Choose Your Perfect Template</h1>
-                    <p>Select from our collection of professionally designed resume templates</p>
-                </div>
-                
-                {/* Category Filter */}
-                <div className="category-filter">
-                    {categories.map(category => (
+            </header>
+
+            <div className="tpl-toolbar">
+                <div className="tpl-filters" role="group" aria-label="Filter by category">
+                    {categories.map((category) => (
                         <button
                             key={category}
-                            className={`category-btn ${selectedCategory === category ? 'active' : ''}`}
+                            type="button"
+                            className="ui-chip"
+                            aria-pressed={selectedCategory === category}
                             onClick={() => setSelectedCategory(category)}
                         >
                             {category}
                         </button>
                     ))}
                 </div>
+                <span className="tpl-count">
+                    {filteredTemplates.length} {filteredTemplates.length === 1 ? 'template' : 'templates'}
+                </span>
             </div>
 
-            <div className="templates-count">
-                {filteredTemplates.length} {filteredTemplates.length === 1 ? 'Template' : 'Templates'} Available
-            </div>
-
-            <div className="template-grid">
-                {filteredTemplates.map((template) => (
-                    <div 
-                        key={template.id} 
-                        className="template-card"
-                        onMouseEnter={() => setHoveredTemplate(template.id)}
-                        onMouseLeave={() => setHoveredTemplate(null)}
+            <div className="tpl-grid">
+                {filteredTemplates.map((template, i) => (
+                    <button
+                        key={template.id}
+                        type="button"
+                        className="tpl-card tt-hover"
+                        style={{ '--tpl-color': template.color, animationDelay: `${i * 40}ms` }}
                         onClick={() => handleTemplateSelect(template.id)}
+                        aria-label={`Use ${template.name} template`}
                     >
-                        <div className="template-preview" style={{ borderColor: template.color }}>
-                            <div className="template-icon" style={{ background: `linear-gradient(135deg, ${template.color}22, ${template.color}44)` }}>
-                                <span style={{ fontSize: '4rem' }}>{template.icon}</span>
-                            </div>
-                            <div className="template-badge" style={{ backgroundColor: template.color }}>
-                                {template.category}
-                            </div>
+                        <div className="tpl-preview">
+                            <TemplateThumb layout={template.layout} color={template.color} />
+                            <span className="tpl-use">
+                                Use template <Icon name="arrowRight" size={16} />
+                            </span>
                         </div>
-                        <div className="template-info">
-                            <h3>{template.name}</h3>
+                        <div className="tpl-info">
+                            <div className="tpl-info-top">
+                                <h3>{template.name}</h3>
+                                <span className="tpl-category">
+                                    <span className="tpl-dot" />
+                                    {template.category}
+                                </span>
+                            </div>
                             <p>{template.description}</p>
-                            <button 
-                                className="select-template-btn"
-                                style={{ 
-                                    backgroundColor: hoveredTemplate === template.id ? template.color : '#f3f4f6',
-                                    color: hoveredTemplate === template.id ? 'white' : '#374151'
-                                }}
-                            >
-                                {hoveredTemplate === template.id ? 'Use This Template →' : 'Select'}
-                            </button>
                         </div>
-                    </div>
+                    </button>
                 ))}
             </div>
 
             {filteredTemplates.length === 0 && (
-                <div className="no-templates">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#ccc" strokeWidth="2">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="12" y1="8" x2="12" y2="12"></line>
-                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                    </svg>
+                <div className="tpl-empty">
+                    <Icon name="alert" size={28} />
                     <h3>No templates found</h3>
-                    <p>Try selecting a different category</p>
+                    <p>Try selecting a different category.</p>
                 </div>
             )}
         </div>

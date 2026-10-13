@@ -1,7 +1,53 @@
 // src/GettingStartedPage.jsx
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import Icon from './components/Icon';
+import TemplateThumb from './components/TemplateThumb';
+import { templates } from './data/templates';
 import './GettingStartedPage.css';
+
+const steps = [
+    {
+        icon: 'grid',
+        title: 'Choose a template',
+        text: 'Pick from professionally designed, ATS-friendly layouts for every industry.',
+    },
+    {
+        icon: 'edit',
+        title: 'Fill in your details',
+        text: 'A guided form with a live preview shows exactly how your resume will look.',
+    },
+    {
+        icon: 'download',
+        title: 'Download & apply',
+        text: 'Export a polished PDF and start applying to the roles you want.',
+    },
+];
+
+const features = [
+    {
+        icon: 'layers',
+        title: 'Professional templates',
+        text: 'Multiple ATS-friendly designs — switch between them without retyping anything.',
+    },
+    {
+        icon: 'sparkles',
+        title: 'AI-powered analysis',
+        text: 'Get an instant ATS score plus specific, actionable suggestions to improve it.',
+    },
+    {
+        icon: 'eye',
+        title: 'Live preview',
+        text: 'See every change reflected instantly on a true-to-size page.',
+    },
+    {
+        icon: 'download',
+        title: 'Export anywhere',
+        text: 'Download as PDF or print directly — ready to send to recruiters.',
+    },
+];
+
+const heroThumbs = ['jakes', 'modern', 'executive'].map((id) => templates.find((t) => t.id === id));
 
 const GettingStartedPage = () => {
     const navigate = useNavigate();
@@ -10,108 +56,91 @@ const GettingStartedPage = () => {
         navigate('/');
     };
 
-    const features = [
-        {
-            icon: '🎨',
-            title: 'Professional Templates',
-            description: 'Choose from multiple ATS-friendly templates designed by experts'
-        },
-        {
-            icon: '🤖',
-            title: 'AI-Powered Analysis',
-            description: 'Get instant ATS score and actionable improvement suggestions'
-        },
-        {
-            icon: '📱',
-            title: 'Export Anywhere',
-            description: 'Download as PDF or share directly with recruiters'
-        }
-    ];
-
     return (
-        <div className="getting-started-container">
-            <div className="gs-hero-section">
-                <div className="gs-badge">✨ Welcome to Smart Resume Builder</div>
-                <h1 className="gs-title">
-                    Build Your <span className="gradient-text">Dream Resume</span> in Minutes
-                </h1>
-                <p className="gs-subtitle">
-                    Create professional, ATS-optimized resumes with our easy-to-use builder. 
-                    Stand out from the crowd and land your dream job.
-                </p>
-            </div>
-
-            <div className="gs-steps-section">
-                <h2 className="gs-section-title">How It Works</h2>
-                <div className="steps-container">
-                    <div className="step-card">
-                        <div className="step-number">1</div>
-                        <div className="step-icon-wrapper">
-                            <svg className="step-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
-                            </svg>
+        <div className="gs">
+            <section className="gs-hero">
+                <div className="gs-hero-inner">
+                    <div className="gs-hero-copy">
+                        <span className="gs-pill">
+                            <Icon name="sparkles" size={14} /> Welcome to Smart Resume Builder
+                        </span>
+                        <h1>
+                            Build a resume that <span className="gs-gradient-text">gets you hired</span>
+                        </h1>
+                        <p>
+                            Create professional, ATS-optimized resumes in minutes. Pick a template,
+                            fill in your story, and download a polished PDF.
+                        </p>
+                        <div className="gs-hero-actions">
+                            <Link to="/templates" className="ui-btn ui-btn--primary ui-btn--lg">
+                                Create my resume <Icon name="arrowRight" size={18} />
+                            </Link>
+                            <button type="button" onClick={handleContinue} className="ui-btn ui-btn--secondary ui-btn--lg">
+                                Go to dashboard
+                            </button>
                         </div>
-                        <h3>Choose Template</h3>
-                        <p>Pick from our collection of professionally designed, ATS-friendly resume templates.</p>
+                        <ul className="gs-hero-meta">
+                            <li><Icon name="check" size={16} /> Free to start</li>
+                            <li><Icon name="check" size={16} /> No credit card</li>
+                            <li><Icon name="check" size={16} /> {templates.length} templates</li>
+                        </ul>
                     </div>
 
-                    <div className="step-connector">
-                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M5 12h14m-4-4l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                        </svg>
-                    </div>
-
-                    <div className="step-card">
-                        <div className="step-number">2</div>
-                        <div className="step-icon-wrapper">
-                            <svg className="step-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
-                            </svg>
-                        </div>
-                        <h3>Fill Your Details</h3>
-                        <p>Add your experience, skills, and education with our guided form and AI suggestions.</p>
-                    </div>
-
-                    <div className="step-connector">
-                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M5 12h14m-4-4l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                        </svg>
-                    </div>
-
-                    <div className="step-card">
-                        <div className="step-number">3</div>
-                        <div className="step-icon-wrapper">
-                            <svg className="step-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
-                            </svg>
-                        </div>
-                        <h3>Download & Apply</h3>
-                        <p>Export your polished resume as PDF and start applying to your dream jobs!</p>
+                    <div className="gs-hero-art" aria-hidden="true">
+                        {heroThumbs.map((t, i) => (
+                            <div key={t.id} className={`gs-hero-card gs-hero-card--${i}`}>
+                                <TemplateThumb layout={t.layout} color={t.color} />
+                            </div>
+                        ))}
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <div className="gs-features-section">
-                <h2 className="gs-section-title">Why Choose Us?</h2>
-                <div className="features-grid">
-                    {features.map((feature, idx) => (
-                        <div key={idx} className="feature-card">
-                            <div className="feature-icon">{feature.icon}</div>
-                            <h3>{feature.title}</h3>
-                            <p>{feature.description}</p>
-                        </div>
-                    ))}
-                </div>
-            </div>
+            <div className="ui-page gs-body">
+                <section className="gs-section" aria-labelledby="gs-steps-title">
+                    <div className="gs-section-head">
+                        <span className="ui-eyebrow">How it works</span>
+                        <h2 id="gs-steps-title">Three steps to a standout resume</h2>
+                    </div>
+                    <ol className="gs-steps">
+                        {steps.map((s, i) => (
+                            <li key={s.title} className="gs-step">
+                                <div className="gs-step-top">
+                                    <span className="gs-step-icon"><Icon name={s.icon} size={22} /></span>
+                                    <span className="gs-step-num">0{i + 1}</span>
+                                </div>
+                                <h3>{s.title}</h3>
+                                <p>{s.text}</p>
+                            </li>
+                        ))}
+                    </ol>
+                </section>
 
-            <div className="gs-cta-section">
-                <button onClick={handleContinue} className="continue-button">
-                    <span>Get Started Now</span>
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M5 12h14m-4-4l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                </button>
-                <p className="gs-cta-note">No credit card required • Free to start</p>
+                <section className="gs-section" aria-labelledby="gs-features-title">
+                    <div className="gs-section-head">
+                        <span className="ui-eyebrow">Why Smart Resume</span>
+                        <h2 id="gs-features-title">Everything you need, nothing you don’t</h2>
+                    </div>
+                    <div className="gs-features">
+                        {features.map((f) => (
+                            <div key={f.title} className="gs-feature">
+                                <span className="gs-feature-icon"><Icon name={f.icon} size={20} /></span>
+                                <h3>{f.title}</h3>
+                                <p>{f.text}</p>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+
+                <section className="gs-cta">
+                    <div>
+                        <h2>Ready to get started?</h2>
+                        <p>Your next opportunity is one great resume away.</p>
+                    </div>
+                    <button type="button" onClick={handleContinue} className="ui-btn ui-btn--lg gs-cta-btn">
+                        Get started now <Icon name="arrowRight" size={18} />
+                    </button>
+                </section>
             </div>
         </div>
     );

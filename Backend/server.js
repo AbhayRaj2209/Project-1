@@ -1,10 +1,8 @@
-import dotenv from 'dotenv';
+import { PORT, validateEnv } from './config/env.js';
 import app from './app.js';
 import connectDB from './utils/connectDB.js';
 
-dotenv.config();
-
-const PORT = process.env.PORT || 5000;
+validateEnv();
 
 connectDB().then(() => {
   app.listen(PORT, () => {
