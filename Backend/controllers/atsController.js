@@ -2,9 +2,8 @@
 import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf.mjs';
 
 // Enhanced Local ATS scoring algorithm
-const analyzeResumeLocally = (resumeText) => {
-    const text = resumeText.toLowerCase();
-    const originalText = resumeText;
+export const analyzeResumeLocally = (resumeText) => {
+    const text = resumeText.toLowerCase().replace(/\s+/g, ' ');
     let score = 0;
     const strengths = [];
     const improvements = [];
@@ -13,23 +12,23 @@ const analyzeResumeLocally = (resumeText) => {
     // 1. Check for essential sections (25 points)
     const sections = {
         'contact': {
-            keywords: ['email', 'phone', '@gmail', '@yahoo', '@outlook', 'linkedin', 'github', '+91', 'contact'],
+            keywords: ['email', 'phone', 'contact'],
             weight: 5
         },
         'education': {
-            keywords: ['education', 'degree', 'university', 'college', 'bachelor', 'master', 'b.tech', 'm.tech', 'b.e', 'bsc', 'msc', 'cgpa', 'gpa', 'percentage', 'institute', 'school'],
+            keywords: ['education', 'academic', 'university', 'college', 'bachelor', 'master', 'b.tech', 'm.tech', 'b.e', 'bsc', 'msc'],
             weight: 5
         },
         'experience': {
-            keywords: ['experience', 'work', 'employment', 'internship', 'intern', 'worked', 'company', 'organization', 'role', 'position', 'job'],
+            keywords: ['experience', 'employment', 'internship', 'professional experience', 'work history'],
             weight: 5
         },
         'skills': {
-            keywords: ['skills', 'technologies', 'programming', 'languages', 'tools', 'proficient', 'expertise', 'technical skills', 'soft skills'],
+            keywords: ['skills', 'technologies', 'technical skills', 'core competencies'],
             weight: 5
         },
         'projects': {
-            keywords: ['project', 'developed', 'built', 'created', 'implemented', 'designed', 'portfolio'],
+            keywords: ['projects', 'selected projects', 'personal projects', 'project experience'],
             weight: 5
         }
     };
@@ -37,7 +36,8 @@ const analyzeResumeLocally = (resumeText) => {
     let sectionsFound = 0;
     let sectionScore = 0;
     for (const [section, config] of Object.entries(sections)) {
-        if (config.keywords.some(keyword => text.includes(keyword))) {
+        const sectionPattern = new RegExp(`(?:^|\\n|\\s)(${config.keywords.map(keyword => keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})(?:$|\\n|\\s|:)`, 'i');
+        if (sectionPattern.test(resumeText)) {
             sectionsFound++;
             sectionScore += config.weight;
             strengths.push(`✓ ${section.charAt(0).toUpperCase() + section.slice(1)} section detected`);
@@ -55,11 +55,12 @@ const analyzeResumeLocally = (resumeText) => {
         'collaborated', 'mentored', 'trained', 'launched', 'executed', 'established',
         'streamlined', 'enhanced', 'spearheaded', 'initiated', 'maintained', 'configured'
     ];
-    const actionVerbsFound = actionVerbs.filter(verb => text.includes(verb));
-    if (actionVerbsFound.length >= 6) {
+    const actionVerbPattern = new RegExp(`\\b(${actionVerbs.join('|')})\\b`, 'gi');
+    const actionVerbsFound = [...new Set((resumeText.match(actionVerbPattern) || []).map(verb => verb.toLowerCase()))];
+    if (actionVerbsFound.length >= 8) {
         score += 15;
         strengths.push(`✓ Excellent use of action verbs (${actionVerbsFound.length} found)`);
-    } else if (actionVerbsFound.length >= 3) {
+    } else if (actionVerbsFound.length >= 4) {
         score += 10;
         recommendations.push('Add more action verbs like "implemented", "optimized", "deployed"');
     } else {
@@ -68,26 +69,9 @@ const analyzeResumeLocally = (resumeText) => {
     }
 
     // 3. Check for quantifiable achievements (15 points)
-    const quantifiablePatterns = [
-        /\d+%/g,                          // percentages
-        /\d+\s*\+/g,                       // 100+, 50+
-        /\d+\s*(users|customers|clients)/gi,
-        /\d+\s*(projects|applications|apps)/gi,
-        /\d+\s*(team|members|people)/gi,
-        /\d+\s*(years|months|weeks)/gi,
-        /\$\d+/g,                          // dollar amounts
-        /₹\d+/g,                           // rupee amounts
-        /\d+x/gi,                          // 2x, 3x improvements
-        /reduced.*\d+/gi,
-        /increased.*\d+/gi,
-        /improved.*\d+/gi
-    ];
-    
-    let quantifiableCount = 0;
-    quantifiablePatterns.forEach(pattern => {
-        const matches = resumeText.match(pattern);
-        if (matches) quantifiableCount += matches.length;
-    });
+    const quantifiablePattern = /\b\d+(?:\.\d+)?\s*(?:%|\+|x|users?|customers?|clients?|projects?|applications?|apps?|team members?|people|years?|months?|weeks?)(?=\s|$|[.,;:])/gi;
+    const quantifiableMatches = resumeText.match(quantifiablePattern) || [];
+    const quantifiableCount = new Set(quantifiableMatches.map(match => match.toLowerCase().replace(/\s+/g, ' ').trim())).size;
 
     if (quantifiableCount >= 4) {
         score += 15;
@@ -114,7 +98,8 @@ const analyzeResumeLocally = (resumeText) => {
     let categoriesFound = new Set();
     for (const [category, skills] of Object.entries(techCategories)) {
         skills.forEach(skill => {
-            if (text.includes(skill)) {
+            const escapedSkill = skill.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            if (new RegExp(`(?:^|[^a-z0-9+#])${escapedSkill}(?=$|[^a-z0-9+#])`, 'i').test(text)) {
                 techFound.push(skill);
                 categoriesFound.add(category);
             }
@@ -174,7 +159,7 @@ const analyzeResumeLocally = (resumeText) => {
     score += contactScore;
 
     // 7. Professional summary/objective check (5 points)
-    const hasSummary = ['summary', 'objective', 'profile', 'about me', 'career objective'].some(word => text.includes(word));
+    const hasSummary = /(?:^|\n|\s)(summary|objective|professional profile|about me|career objective)(?:$|\n|\s|:)/i.test(resumeText);
     if (hasSummary) {
         score += 5;
         strengths.push('✓ Professional summary/objective present');
@@ -183,7 +168,7 @@ const analyzeResumeLocally = (resumeText) => {
     }
 
     // 8. Certifications & achievements (5 points)
-    const hasCertifications = ['certified', 'certification', 'certificate', 'award', 'achievement', 'honor', 'recognition', 'coursera', 'udemy', 'hackerrank', 'leetcode'].some(word => text.includes(word));
+    const hasCertifications = /(?:^|\n|\s)(certifications?|awards?|achievements?|honors?|recognition)(?:$|\n|\s|:)/i.test(resumeText);
     if (hasCertifications) {
         score += 5;
         strengths.push('✓ Certifications/achievements mentioned');
@@ -199,6 +184,19 @@ const analyzeResumeLocally = (resumeText) => {
     formatAnalysis += `• Technical skills: ${techFound.length} technologies detected\n`;
     formatAnalysis += `• Quantifiable metrics: ${quantifiableCount} numbers/percentages found\n`;
     formatAnalysis += `• Tech categories covered: ${Array.from(categoriesFound).join(', ') || 'None detected'}`;
+
+    // A score of 100 is reserved for resumes with evidence in every major area.
+    // This prevents keyword-heavy but incomplete resumes from appearing perfect.
+    const hasAllCoreEvidence = sectionsFound === 5
+        && actionVerbsFound.length >= 8
+        && quantifiableCount >= 4
+        && techFound.length >= 10
+        && hasEmail
+        && hasPhone
+        && hasSummary;
+    if (!hasAllCoreEvidence) {
+        score = Math.min(score, 95);
+    }
 
     // Ensure score is within bounds
     score = Math.min(Math.round(score), 100);
